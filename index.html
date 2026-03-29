@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HTML Wireframe Tool</title>
+<title>Free HTML Wireframe Tool</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555555'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/%3E%3C/svg%3E" type="image/svg+xml">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
@@ -48,7 +48,46 @@
         <div class="modal-content">
             <div class="modal-header">How-To Guide<button class="modal-close" id="close-modal">&times;</button></div>
             <div class="modal-body">
-                <h3>📌 The Basics</h3><ul><li><b>Add Elements:</b> Drag and drop icons from the left toolbar onto the canvas.</li><li><b>Select & Move:</b> Click an element to select it. Click and drag to move it around.</li><li><b>Edit Text:</b> Double-click on any text within a component to edit it.</li></ul>
+                <h3>📌 The Basics</h3>
+                <ul>
+                    <li><b>Add Elements:</b> Drag and drop icons from the left toolbar onto the canvas.</li>
+                    <li><b>Select & Move:</b> Click an element to select it. Click and drag to move it around.</li>
+                    <li><b>Edit Text:</b> Double-click on any text within a component to edit it. Click outside to save.</li>
+                    <li><b>Resize:</b> Select an element and drag the circular handles on its corners or edges. Hold <kbd>Shift</kbd> to scale proportionally.</li>
+                </ul>
+
+                <h3>⚡ Connectors & Flowcharts</h3>
+                <ul>
+                    <li><b>Draw Lines:</b> Hover over a selected element to reveal blue connection nodes. Click and drag from a node to another element to draw a connector line.</li>
+                    <li><b>Edit Lines:</b> Click a line to select it. Use the Properties Panel on the right to change it to Straight, Curved, or Orthogonal (Elbow), and add arrows or dots to the ends.</li>
+                </ul>
+
+                <h3>🎨 Properties Panel (Right Side)</h3>
+                <ul>
+                    <li><b>Formatting:</b> Change width, height, font size, bold, italic, underline, or strikethrough.</li>
+                    <li><b>Component States:</b> Change an element to look <i>Disabled, Focus, Active,</i> or <i>Read-only</i> using the State dropdown.</li>
+                    <li><b>Layering:</b> Use the Layer arrows to send elements to the front or back.</li>
+                    <li><b>Smart Components:</b> If you select a Dropdown, Table, or Tab menu, special text boxes will appear allowing you to quickly edit options (comma-separated).</li>
+                </ul>
+
+                <h3>⌨️ Keyboard Shortcuts & Canvas Controls</h3>
+                <ul>
+                    <li><kbd>Middle Click</kbd> or Hold <kbd>Spacebar</kbd> + Drag to pan across the infinite canvas.</li>
+                    <li><kbd>Scroll Wheel</kbd> to Zoom In and Out.</li>
+                    <li><kbd>Ctrl</kbd> + <kbd>C</kbd> / <kbd>Ctrl</kbd> + <kbd>V</kbd> to Copy and Paste selected elements.</li>
+                    <li><kbd>Ctrl</kbd> + <kbd>V</kbd> to paste Images or SVGs directly from your clipboard onto the canvas.</li>
+                    <li><kbd>Ctrl</kbd> + <kbd>Z</kbd> / <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> to Undo / Redo.</li>
+                    <li><kbd>Delete</kbd> or <kbd>Backspace</kbd> to remove selected elements.</li>
+                    <li><kbd>Arrow Keys</kbd> to nudge elements. Hold <kbd>Shift</kbd> to nudge by 10 pixels.</li>
+                    <li><kbd>Ctrl</kbd> + <kbd>S</kbd> to Quick Save to your browser's local storage.</li>
+                </ul>
+
+                <h3>💾 Saving & Exporting</h3>
+                <ul>
+                    <li><b>Save JSON:</b> Downloads your raw project file.</li>
+                    <li><b>Load JSON:</b> Restores a saved project. You can also directly <b>Drag & Drop</b> a JSON file onto the canvas to load it instantly.</li>
+                    <li><b>Export PNG:</b> Select the elements you want to export, then click Export to PNG to download a clean image file of your selection.</li>
+                </ul>
             </div>
         </div>
     </div>
