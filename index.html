@@ -1,15 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Free HTML Wireframe Tool</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555555'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/%3E%3C/svg%3E" type="image/svg+xml">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<style>
-:root{--bg-color:#f5f5f5;--canvas-bg:#e0e0e0;--border-color:#555;--text-color:#222;--element-bg:#fff;--dot-color:#bdbdbd;--select-color:#2196F3;--frame-color:#9e9e9e;--snap-color:#4CAF50;--guide-color:#E91E63}*{box-sizing:border-box}body{margin:0;padding:0;display:flex;height:100vh;font-family:'Comic Sans MS','Chalkboard SE',sans-serif;background-color:var(--bg-color);color:var(--text-color);overflow:hidden;text-align:left}#toolbar{width:250px;background-color:var(--element-bg);border-right:2px solid var(--border-color);padding:20px;z-index:10;box-shadow:2px 0 5px rgba(0,0,0,.1);overflow-y:auto;display:flex;flex-direction:column;user-select:none;flex-shrink:0;transition:margin-left .3s ease}#toolbar.collapsed{margin-left:-250px}#sidebar-toggle{position:fixed;left:250px;top:50%;transform:translateY(-50%);width:20px;height:50px;background:var(--element-bg);border:2px solid var(--border-color);border-left:none;border-radius:0 8px 8px 0;z-index:100;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;transition:left .3s ease;font-weight:700}#sidebar-toggle.collapsed{left:0}#toolbar h2{font-size:14px;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid var(--border-color);padding-bottom:8px;margin-top:20px;margin-bottom:15px;font-weight:700}#toolbar h2:first-child{margin-top:0}.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.tool-item{border:2px solid var(--border-color);background:var(--bg-color);border-radius:6px;padding:12px 5px;cursor:grab;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 4px rgba(0,0,0,.05)}.tool-item:hover{background:#e0e0e0;transform:translateY(-2px);box-shadow:0 4px 6px rgba(0,0,0,.1)}.tool-item svg{width:26px;height:26px;pointer-events:none;stroke-linecap:round;stroke-linejoin:round}.btn-action{background:#333;color:#fff;border:none;padding:10px;margin-top:10px;cursor:pointer;font-weight:700;border-radius:4px;font-family:inherit;transition:background .2s;font-size:14px}.btn-action:hover{background:#000}.bmc-btn{display:flex;align-items:center;justify-content:center;background-color:#FFDD00;color:#000;padding:12px 10px;border-radius:6px;text-decoration:none;font-weight:700;font-family:sans-serif;font-size:14px;box-shadow:0 2px 4px rgba(0,0,0,.15);transition:transform .2s,box-shadow .2s;margin-top:25px;border:2px solid #333}.bmc-btn:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.2)}#properties-panel{position:absolute;top:20px;right:20px;background:var(--element-bg);border:2px solid var(--border-color);padding:15px;border-radius:6px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:20;width:250px;display:flex;flex-direction:column;gap:10px;font-size:14px}#properties-panel.hidden{display:none}#properties-panel input[type=number],#properties-panel select,#properties-panel textarea{font-family:inherit;border:2px solid var(--border-color);font-size:13px;padding:5px;outline:0;resize:vertical;width:100%}.icon-btn{background:#eee;border:1px solid var(--border-color);border-radius:4px;padding:4px 8px;cursor:pointer;font-size:12px;font-weight:700;flex:1;text-align:center;color:#333;transition:all .1s}.icon-btn:hover{background:#ddd}.icon-btn.active{background:#d0d0d0;box-shadow:inset 0 2px 4px rgba(0,0,0,.3);color:#000;border-color:#999}#viewport{flex:1;position:relative;overflow:hidden;background-color:var(--canvas-bg);cursor:default}#viewport.panning{cursor:grab}#viewport.panning:active{cursor:grabbing}#board{position:absolute;width:10000px;height:10000px;transform-origin:0 0;background-image:radial-gradient(var(--dot-color) 1px,transparent 1px);background-size:20px 20px}.guide-line{position:absolute;background:var(--guide-color);z-index:1000;pointer-events:none;display:none;opacity:.6}.guide-line.v{width:1px;height:10000px;top:0}.guide-line.h{height:1px;width:10000px;left:0}#connections-layer{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:5}.wf-connector{stroke:var(--border-color);stroke-width:3px;fill:none;pointer-events:visibleStroke;cursor:pointer;transition:stroke .2s,stroke-width .2s}.wf-connector:hover{stroke:#000;stroke-width:5px}.wf-connector.selected{stroke:var(--select-color);stroke-width:4px}.wf-temp-connector{stroke:var(--select-color);stroke-width:3px;stroke-dasharray:5,5;fill:none;pointer-events:none}#marquee{position:absolute;border:1px solid var(--select-color);background:rgba(33,150,243,.1);display:none;pointer-events:none;z-index:1000}.canvas-element{position:absolute;cursor:move;border:2px dashed transparent;padding:5px;background:0 0;min-width:20px;min-height:20px;z-index:1;user-select:none;-webkit-user-select:none}.canvas-element.selected{border-color:var(--select-color);background:rgba(255,255,255,.5)}.canvas-element img,.canvas-element svg.bg-svg{pointer-events:none;-webkit-user-drag:none}.conn-node{position:absolute;width:12px;height:12px;background:var(--select-color);border:2px solid #fff;border-radius:50%;display:none;z-index:15;cursor:crosshair;transition:transform .1s,background .1s}.canvas-element.selected .conn-node,.canvas-element:hover .conn-node,body.drawing-connection .conn-node{display:block}.conn-node.snap-hover{transform:scale(1.6);background:var(--snap-color);border-color:#fff;z-index:100}.conn-node.top{top:-8px;left:calc(50% - 8px)}.conn-node.bottom{bottom:-8px;left:calc(50% - 8px)}.conn-node.left{left:-8px;top:calc(50% - 8px)}.conn-node.right{right:-8px;top:calc(50% - 8px)}.conn-node:hover{transform:scale(1.6)}.resize-handle{position:absolute;width:10px;height:10px;background:var(--element-bg);border:2px solid var(--select-color);border-radius:50%;display:none;z-index:20}.canvas-element.selected .resize-handle{display:block}.resize-handle.nw{top:-6px;left:-6px;cursor:nwse-resize}.resize-handle.ne{top:-6px;right:-6px;cursor:nesw-resize}.resize-handle.sw{bottom:-6px;left:-6px;cursor:nesw-resize}.resize-handle.se{bottom:-6px;right:-6px;cursor:nwse-resize}.resize-handle.n{top:-6px;left:calc(50% - 5px);cursor:ns-resize}.resize-handle.s{bottom:-6px;left:calc(50% - 5px);cursor:ns-resize}.resize-handle.e{right:-6px;top:calc(50% - 5px);cursor:ew-resize}.resize-handle.w{left:-6px;top:calc(50% - 5px);cursor:ew-resize}.wf-component{width:100%;height:100%;font-size:inherit;position:relative}.editable{white-space:pre-wrap;word-wrap:break-word;outline:0}.editable[contenteditable=true]{outline:2px dashed var(--select-color);cursor:text;padding:2px;border-radius:2px;background:rgba(255,255,255,.8);display:inline-block;color:#000;min-width:10px}.state-disabled{opacity:.4;filter:grayscale(100%)}.state-focus .wf-btn,.state-focus .wf-circ,.state-focus .wf-input,.state-focus .wf-rect,.state-focus .wf-select{outline:3px solid #000;outline-offset:2px}.state-active .wf-btn,.state-active .wf-select{background-color:#d0d0d0;box-shadow:inset 0 3px 5px rgba(0,0,0,.3)}.state-readonly .wf-browser,.state-readonly .wf-btn,.state-readonly .wf-checkbox,.state-readonly .wf-circ,.state-readonly .wf-input,.state-readonly .wf-mobile,.state-readonly .wf-paragraph,.state-readonly .wf-radio,.state-readonly .wf-rect,.state-readonly .wf-select,.state-readonly .wf-sticky,.state-readonly .wf-table,.state-readonly .wf-tabs{background-color:#f5f5f5;border-style:dotted;color:#777}.state-readonly .wf-input,.state-readonly .wf-select{border-color:#aaa;background:#fafafa}.state-readonly .wf-diam polygon{fill:#f5f5f5!important;stroke-dasharray:8,8;stroke:#777!important}.wf-label{display:flex;align-items:center;color:var(--text-color);font-weight:400}.wf-annotator{background-color:var(--guide-color);color:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:inherit;box-shadow:2px 2px 5px rgba(0,0,0,.3)}.wf-annotator .editable{color:#fff;background:0 0;text-align:center;width:100%}.wf-annotator .editable[contenteditable=true]{background:rgba(255,255,255,.2);outline-color:#fff}.wf-rect{border:2px solid var(--border-color);background:var(--element-bg);display:flex;align-items:center;justify-content:center;text-align:center;padding:10px}.wf-circ{border:2px solid var(--border-color);background:var(--element-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px}.wf-diam-container{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:15%;z-index:1;text-align:center}.wf-tooltip{background-color:#333;color:#fff;padding:6px 12px;border-radius:4px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;position:relative;box-shadow:0 2px 4px rgba(0,0,0,.2)}.wf-tooltip::after{content:'';position:absolute;top:100%;left:calc(50% - 6px);border-width:6px;border-style:solid;border-color:#333 transparent transparent transparent}.wf-btn{border-radius:24px;background:#f0f0f0;border:2px solid var(--border-color);box-shadow:2px 2px 0 rgba(0,0,0,.15);font-weight:inherit;color:var(--text-color);display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 16px;overflow:hidden}.wf-input,.wf-select{background:var(--element-bg);border:2px solid var(--border-color);color:var(--text-color)}.wf-input{display:flex;align-items:center;padding:8px 12px;overflow:hidden}.wf-select{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;gap:10px}.wf-btn .editable,.wf-input .editable,.wf-select .editable{flex:1;min-width:0;overflow:hidden;display:block}.wf-select::after{content:'▼';font-size:.8em;flex-shrink:0}.wf-p{margin:0;overflow:hidden;width:100%;height:100%;color:var(--text-color)}.wf-sticky{background-color:#ffeb3b;color:#000;border:1px solid #cddc39;box-shadow:2px 2px 6px rgba(0,0,0,.2);padding:10px;display:flex;align-items:center;justify-content:center;text-align:center}.wf-browser{border:2px solid var(--border-color);background:var(--element-bg);display:flex;flex-direction:column;border-radius:6px;overflow:hidden}.browser-header{background:#e0e0e0;border-bottom:2px solid var(--border-color);display:flex;align-items:center;padding:6px 10px;gap:10px;flex-shrink:0}.browser-dots{display:flex;gap:4px;flex-shrink:0}.browser-dots span{width:10px;height:10px;border-radius:50%;background:#999;border:1px solid #777}.browser-url{flex:1;background:#fff;border:1px solid #ccc;border-radius:4px;padding:2px 8px;font-size:11px;overflow:hidden}.browser-content{flex:1;background:rgba(255,255,255,.01);pointer-events:none}.wf-mobile{border:4px solid var(--border-color);background:var(--element-bg);border-radius:28px;display:flex;flex-direction:column;overflow:hidden;position:relative}.mobile-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:35%;height:22px;background:var(--border-color);border-bottom-left-radius:12px;border-bottom-right-radius:12px;z-index:5}.mobile-content{flex:1;background:rgba(255,255,255,.01);pointer-events:none}.wf-tabs{display:flex;flex-direction:column;border-radius:4px;overflow:visible;background:0 0}.wf-tab-header{display:flex;border-bottom:2px solid var(--border-color);padding:0 5px;gap:2px;flex-shrink:0;align-items:flex-end}.wf-tab-item{padding:6px 15px;background:#e0e0e0;border:2px solid var(--border-color);border-bottom:none;border-radius:6px 6px 0 0;margin-bottom:-2px;font-size:13px;font-weight:inherit;color:var(--text-color);display:flex;align-items:center;justify-content:center}.wf-tab-item.active{background:var(--element-bg);border-bottom:2px solid var(--element-bg);z-index:2;position:relative}.wf-tab-content{flex:1;background:var(--element-bg);border:2px solid var(--border-color);border-top:none}.wf-dropdown-list{display:none;position:absolute;top:100%;left:5px;right:5px;background:var(--element-bg);border:2px solid var(--border-color);border-top:none;z-index:15;box-shadow:0 4px 6px rgba(0,0,0,.1);width:calc(100% - 10px)}.canvas-element.state-expanded .wf-dropdown-list{display:block}.wf-dropdown-item{padding:6px;border-bottom:1px solid var(--dot-color);font-size:.9em;text-align:left;white-space:normal;color:var(--text-color)}.wf-dropdown-item:last-child{border-bottom:none}.wf-checkbox,.wf-radio{display:flex;align-items:center;gap:8px;padding:4px;font-family:inherit;width:100%;height:100%}.wf-checkbox .box{width:18px;height:18px;border:2px solid var(--border-color);border-radius:3px;background:var(--element-bg);position:relative;cursor:pointer;flex-shrink:0}.wf-checkbox.is-checked .box::after{content:'✔';position:absolute;top:-3px;left:2px;font-size:16px;color:var(--text-color)}.wf-radio .circle{width:18px;height:18px;border:2px solid var(--border-color);border-radius:50%;background:var(--element-bg);position:relative;cursor:pointer;flex-shrink:0}.wf-radio.is-checked .circle::after{content:'';position:absolute;top:3px;left:3px;width:8px;height:8px;background:var(--text-color);border-radius:50%}.wf-checkbox .editable,.wf-radio .editable{flex:1;overflow:hidden;display:block}.table-container{position:relative;width:max-content;height:max-content}.wf-table{border-collapse:collapse;background:var(--element-bg);width:100%;height:100%;color:var(--text-color);font-size:inherit}.wf-table td,.wf-table th{border:2px solid var(--border-color);padding:8px;min-width:40px;min-height:20px;text-align:center;overflow:hidden;position:relative;word-break:break-all}.wf-table th{background-color:#f0f0f0}.table-controls{position:absolute;display:none;background:var(--border-color);color:#fff;border:none;cursor:pointer;font-weight:700;z-index:5;align-items:center;justify-content:center}.add-col-btn{top:0;width:20px;height:100%;right:-25px}.add-row-btn{left:0;height:20px;width:100%;bottom:-25px}.add-col-btn:hover,.add-row-btn:hover{background:#222}.table-resizer{position:absolute;background:var(--select-color);z-index:150;display:none;pointer-events:none}.table-resizer.v{width:3px;margin-left:-1px}.table-resizer.h{height:3px;margin-top:-1px}.selected-cell{outline:3px solid var(--snap-color)!important;outline-offset:-3px;background-color:rgba(76,175,80,.1)!important}#size-tooltip{position:fixed;background:rgba(0,0,0,.85);color:#fff;padding:4px 8px;font-size:12px;font-weight:700;border-radius:4px;pointer-events:none;z-index:10000;display:none;font-family:sans-serif}#help-btn{position:fixed;bottom:25px;right:25px;width:45px;height:45px;background:var(--select-color);color:#fff;border:none;border-radius:50%;font-size:24px;font-weight:700;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.3);z-index:1000;display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s}#help-btn:hover{transform:scale(1.1);background:#1976D2}#help-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px)}#help-modal.visible{display:flex}.modal-content{background:var(--element-bg);width:600px;max-width:90%;max-height:85vh;border-radius:8px;border:2px solid var(--border-color);box-shadow:0 10px 30px rgba(0,0,0,.3);display:flex;flex-direction:column;overflow:hidden}.modal-header{padding:15px 20px;background:#e0e0e0;border-bottom:2px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:18px}.modal-close{background:0 0;border:none;font-size:24px;cursor:pointer;color:#333;line-height:1}.modal-body{padding:20px;overflow-y:auto;font-size:14px;line-height:1.6}.modal-body h3{margin-top:15px;margin-bottom:5px;border-bottom:2px solid #eee;padding-bottom:5px}.modal-body h3:first-child{margin-top:0}.modal-body ul{margin-top:5px;padding-left:20px}.modal-body li{margin-bottom:8px}kbd{background:#eee;border:1px solid #ccc;border-radius:4px;padding:2px 6px;font-family:monospace;font-size:12px;font-weight:700}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Wireframe Tool</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555555'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/%3E%3C/svg%3E" type="image/svg+xml">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* CSS Variables */
+        :root {
+            --bg-color: #f5f5f5; --canvas-bg: #e0e0e0; --border-color: #555555;
+            --text-color: #222222; --element-bg: #ffffff; --dot-color: #bdbdbd;
+            --select-color: #2196F3; --frame-color: #9e9e9e; --snap-color: #4CAF50;
+            --guide-color: #E91E63;
+        }
+
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; display: flex; height: 100vh; font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif; background-color: var(--bg-color); color: var(--text-color); overflow: hidden; text-align: left; }
+
+        /* Sidebar / Toolbar */
+        #toolbar { width: 250px; background-color: var(--element-bg); border-right: 2px solid var(--border-color); padding: 20px; z-index: 10; box-shadow: 2px 0 5px rgba(0,0,0,0.1); overflow-y: auto; display: flex; flex-direction: column; user-select: none; flex-shrink: 0; transition: margin-left 0.3s ease; }
+        #toolbar.collapsed { margin-left: -250px; }
+        #sidebar-toggle { position: fixed; left: 250px; top: 50%; transform: translateY(-50%); width: 20px; height: 50px; background: var(--element-bg); border: 2px solid var(--border-color); border-left: none; border-radius: 0 8px 8px 0; z-index: 100; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: left 0.3s ease; font-weight: bold; }
+        #sidebar-toggle.collapsed { left: 0; }
+        #toolbar h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--border-color); padding-bottom: 8px; margin-top: 20px; margin-bottom: 15px; font-weight: bold; }
+        #toolbar h2:first-child { margin-top: 0; }
+
+        .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .tool-item { border: 2px solid var(--border-color); background: var(--bg-color); border-radius: 6px; padding: 12px 5px; cursor: grab; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .tool-item:hover { background: #e0e0e0; transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .tool-item svg { width: 26px; height: 26px; pointer-events: none; stroke-linecap: round; stroke-linejoin: round; }
+
+        .btn-action { background: #333; color: white; border: none; padding: 10px; margin-top: 10px; cursor: pointer; font-weight: bold; border-radius: 4px; font-family: inherit; transition: background 0.2s; font-size: 14px; }
+        .btn-action:hover { background: #000; }
+
+        /* Properties Panel */
+        #properties-panel { position: absolute; top: 20px; right: 20px; background: var(--element-bg); border: 2px solid var(--border-color); padding: 15px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 20; width: 260px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; max-height: 90vh; overflow-y: auto;}
+        #properties-panel.hidden { display: none; }
+        #properties-panel select, #properties-panel textarea, #properties-panel input[type="text"], #properties-panel input[type="number"] { font-family: inherit; border: 2px solid var(--border-color); font-size: 13px; padding: 5px; outline: none; resize: vertical; width: 100%; }
+
+        .icon-btn { background: #eee; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px; font-weight: bold; flex: 1; text-align: center; color: #333; transition: all 0.1s; }
+        .icon-btn:hover { background: #ddd; }
+        .icon-btn.active { background: #d0d0d0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); color: #000; border-color: #999; }
+
+        /* Canvas Wrapper */
+        #viewport { flex: 1; position: relative; overflow: hidden; background-color: var(--canvas-bg); cursor: default; }
+        #viewport.panning { cursor: grab; }
+        #viewport.panning:active { cursor: grabbing; }
+
+        #board { position: absolute; width: 10000px; height: 10000px; transform-origin: 0 0; background-image: radial-gradient(var(--dot-color) 1px, transparent 1px); background-size: 20px 20px; }
+        .guide-line { position: absolute; background: var(--guide-color); z-index: 1000; pointer-events: none; display: none; opacity: 0.6; }
+        .guide-line.v { width: 1px; height: 10000px; top: 0; }
+        .guide-line.h { height: 1px; width: 10000px; left: 0; }
+
+        /* Connections */
+        #connections-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 5; }
+        .wf-connector { stroke: var(--border-color); fill: none; pointer-events: visibleStroke; cursor: pointer; transition: stroke 0.2s; }
+        .wf-connector:hover { stroke: #000; }
+        .wf-connector.selected { stroke: var(--select-color) !important; }
+        .wf-temp-connector { stroke: var(--select-color); stroke-width: 3px; stroke-dasharray: 5,5; fill: none; pointer-events: none; }
+        
+        .conn-label { position: absolute; transform: translate(-50%, -50%); background: rgba(255,255,255,0.95); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 12px; z-index: 10; font-family: sans-serif; display: none; white-space: nowrap; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .conn-label[contenteditable="true"] { outline: 2px dashed var(--select-color); cursor: text; }
+        
+        /* Interactive Handles */
+        #connector-handles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; }
+        .conn-handle { position: absolute; width: 14px; height: 14px; background: #FFC107; border: 2px solid #333; border-radius: 50%; z-index: 200; cursor: grab; transform: translate(-50%, -50%); box-shadow: 0 2px 4px rgba(0,0,0,0.2); pointer-events: auto; }
+        .conn-handle:active { cursor: grabbing; background: var(--select-color); }
+        .end-handle { background: #FFC107; }
+        .wp-handle { background: var(--select-color); border: 2px solid #fff; }
+        .ghost-handle { background: #fff; border: 2px dashed var(--select-color); opacity: 0.5; cursor: crosshair; }
+        .ghost-handle:hover { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+
+        #marquee { position: absolute; border: 1px solid var(--select-color); background: rgba(33, 150, 243, 0.1); display: none; pointer-events: none; z-index: 1000; }
+
+        /* Elements */
+        .canvas-element { position: absolute; cursor: move; border: 2px dashed transparent; padding: 5px; background: transparent; min-width: 20px; min-height: 20px; z-index: 1; user-select: none; -webkit-user-select: none; }
+        .canvas-element.selected { border-color: var(--select-color); background: rgba(255, 255, 255, 0.5); }
+        .canvas-element svg.bg-svg, .canvas-element img { pointer-events: none; -webkit-user-drag: none; }
+
+        .conn-node { position: absolute; width: 12px; height: 12px; background: var(--select-color); border: 2px solid #fff; border-radius: 50%; display: none; z-index: 15; cursor: crosshair; transition: transform 0.1s, background 0.1s; }
+        .canvas-element:hover .conn-node, .canvas-element.selected .conn-node, body.drawing-connection .conn-node { display: block; }
+        .conn-node.snap-hover { transform: scale(1.6); background: var(--snap-color); border-color: #fff; z-index: 100; }
+        .conn-node.top { top: -8px; left: calc(50% - 8px); } .conn-node.bottom { bottom: -8px; left: calc(50% - 8px); }
+        .conn-node.left { left: -8px; top: calc(50% - 8px); } .conn-node.right { right: -8px; top: calc(50% - 8px); }
+        .conn-node:hover { transform: scale(1.6); }
+
+        .resize-handle { position: absolute; width: 10px; height: 10px; background: var(--element-bg); border: 2px solid var(--select-color); border-radius: 50%; display: none; z-index: 20; }
+        .canvas-element.selected .resize-handle { display: block; }
+        .resize-handle.nw { top: -6px; left: -6px; cursor: nwse-resize; } .resize-handle.ne { top: -6px; right: -6px; cursor: nesw-resize; }
+        .resize-handle.sw { bottom: -6px; left: -6px; cursor: nesw-resize; } .resize-handle.se { bottom: -6px; right: -6px; cursor: nwse-resize; }
+        .resize-handle.n { top: -6px; left: calc(50% - 5px); cursor: ns-resize; } .resize-handle.s { bottom: -6px; left: calc(50% - 5px); cursor: ns-resize; }
+        .resize-handle.e { right: -6px; top: calc(50% - 5px); cursor: ew-resize; } .resize-handle.w { left: -6px; top: calc(50% - 5px); cursor: ew-resize; }
+
+        .wf-component { width: 100%; height: 100%; font-size: inherit; position: relative; }
+        .editable { white-space: pre-wrap; word-wrap: break-word; outline: none; }
+        .editable[contenteditable="true"] { outline: 2px dashed var(--select-color); cursor: text; padding: 2px; border-radius: 2px; background: rgba(255,255,255,0.8); display: inline-block; color: #000; min-width: 10px; }
+
+        /* States */
+        .state-disabled { opacity: 0.4; filter: grayscale(100%); }
+        .state-focus .wf-btn, .state-focus .wf-input, .state-focus .wf-select, .state-focus .wf-rect, .state-focus .wf-circ { outline: 3px solid #000; outline-offset: 2px; }
+        .state-active .wf-btn, .state-active .wf-select { background-color: #d0d0d0; box-shadow: inset 0 3px 5px rgba(0,0,0,0.3); }
+        .state-readonly .wf-btn, .state-readonly .wf-input, .state-readonly .wf-select, .state-readonly .wf-checkbox, .state-readonly .wf-radio, .state-readonly .wf-table, .state-readonly .wf-browser, .state-readonly .wf-tabs, .state-readonly .wf-mobile, .state-readonly .wf-paragraph, .state-readonly .wf-sticky, .state-readonly .wf-rect, .state-readonly .wf-circ { background-color: #f5f5f5; border-style: dotted; color: #777; }
+        .state-readonly .wf-input, .state-readonly .wf-select { border-color: #aaa; background: #fafafa; }
+        .state-readonly .wf-diam polygon { fill: #f5f5f5 !important; stroke-dasharray: 8, 8; stroke: #777 !important; }
+
+        /* Shapes */
+        .wf-label { display: flex; align-items: center; color: var(--text-color); font-weight: normal; width: 100%; }
+        .wf-label .editable { width: 100%; }
+        .wf-annotator { background-color: var(--guide-color); color: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: inherit; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); }
+        .wf-annotator .editable { color: white; background: transparent; text-align: center; width: 100%; }
+        .wf-annotator .editable[contenteditable="true"] { background: rgba(255,255,255,0.2); outline-color: white; }
+        .wf-rect { border: 2px solid var(--border-color); background: var(--element-bg); display: flex; align-items: center; justify-content: center; text-align: center; padding: 10px; width: 100%; }
+        .wf-circ { border: 2px solid var(--border-color); background: var(--element-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; padding: 10px; width: 100%; }
+        .wf-diam-container { position: absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding: 15%; z-index: 1; text-align: center; }
+        .wf-line-inner { width: 100%; height: 2px; background: var(--border-color); }
+        .wf-tooltip { background-color: #333; color: #fff; padding: 6px 12px; border-radius: 4px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12px; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.2); width: 100%; }
+        .wf-tooltip::after { content: ''; position: absolute; top: 100%; left: calc(50% - 6px); border-width: 6px; border-style: solid; border-color: #333 transparent transparent transparent; }
+        .wf-btn { border-radius: 24px; background: #f0f0f0; border: 2px solid var(--border-color); box-shadow: 2px 2px 0px rgba(0,0,0,0.15); font-weight: inherit; color: var(--text-color); display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px 16px; overflow: hidden; width: 100%; }
+        .wf-input, .wf-select { background: var(--element-bg); border: 2px solid var(--border-color); color: var(--text-color); width: 100%; }
+        .wf-input { display: flex; align-items: center; padding: 8px 12px; overflow: hidden; }
+        .wf-select { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; gap: 10px; }
+        .wf-btn .editable, .wf-input .editable, .wf-select .editable { flex: 1; min-width: 0; overflow: hidden; display: block; }
+        .wf-select::after { content: '▼'; font-size: 0.8em; flex-shrink: 0; }
+        .wf-p { margin: 0; overflow: hidden; width: 100%; height: 100%; color: var(--text-color); }
+        .wf-sticky { background-color: #ffeb3b; color: #000; border: 1px solid #cddc39; box-shadow: 2px 2px 6px rgba(0,0,0,0.2); padding: 10px; display: flex; align-items: center; justify-content: center; text-align: center; width: 100%; }
+
+        /* Frames */
+        .wf-browser { border: 2px solid var(--border-color); background: var(--element-bg); display: flex; flex-direction: column; border-radius: 6px; overflow: hidden; }
+        .browser-header { background: #e0e0e0; border-bottom: 2px solid var(--border-color); display: flex; align-items: center; padding: 6px 10px; gap: 10px; flex-shrink: 0; }
+        .browser-dots { display: flex; gap: 4px; flex-shrink: 0; }
+        .browser-dots span { width: 10px; height: 10px; border-radius: 50%; background: #999; border: 1px solid #777; }
+        .browser-url { flex: 1; background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 2px 8px; font-size: 11px; overflow: hidden; }
+        .browser-content { flex: 1; background: rgba(255,255,255,0.01); pointer-events: none; }
+        
+        .wf-mobile { border: 4px solid var(--border-color); background: var(--element-bg); border-radius: 28px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .mobile-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 35%; height: 22px; background: var(--border-color); border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; z-index: 5; }
+        .mobile-content { flex: 1; background: rgba(255,255,255,0.01); pointer-events: none; }
+
+        .wf-tabs { display: flex; flex-direction: column; border-radius: 4px; overflow: visible; background: transparent; }
+        .wf-tab-header { display: flex; border-bottom: 2px solid var(--border-color); padding: 0 5px; gap: 2px; flex-shrink: 0; align-items: flex-end; }
+        .wf-tab-item { padding: 6px 15px; background: #e0e0e0; border: 2px solid var(--border-color); border-bottom: none; border-radius: 6px 6px 0 0; margin-bottom: -2px; font-size: 13px; font-weight: inherit; color: var(--text-color); display: flex; align-items: center; justify-content: center;}
+        .wf-tab-item.active { background: var(--element-bg); border-bottom: 2px solid var(--element-bg); z-index: 2; position: relative; }
+        .wf-tab-content { flex: 1; background: var(--element-bg); border: 2px solid var(--border-color); border-top: none; }
+
+        .wf-dropdown-list { display: none; position: absolute; top: 100%; left: 5px; right: 5px; background: var(--element-bg); border: 2px solid var(--border-color); border-top: none; z-index: 15; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: calc(100% - 10px); }
+        .canvas-element.state-expanded .wf-dropdown-list { display: block; }
+        .wf-dropdown-item { padding: 6px; border-bottom: 1px solid var(--dot-color); font-size: 0.9em; text-align: left; white-space: normal; color: var(--text-color); }
+        .wf-dropdown-item:last-child { border-bottom: none; }
+
+        .wf-checkbox, .wf-radio { display: flex; align-items: center; gap: 8px; padding: 4px; font-family: inherit; width: 100%; height: 100%; }
+        .wf-checkbox .box { width: 18px; height: 18px; border: 2px solid var(--border-color); border-radius: 3px; background: var(--element-bg); position: relative; cursor: pointer; flex-shrink: 0; }
+        .wf-checkbox.is-checked .box::after { content: '✔'; position: absolute; top: -3px; left: 2px; font-size: 16px; color: var(--text-color); }
+        .wf-radio .circle { width: 18px; height: 18px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--element-bg); position: relative; cursor: pointer; flex-shrink: 0; }
+        .wf-radio.is-checked .circle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 8px; height: 8px; background: var(--text-color); border-radius: 50%; }
+        .wf-checkbox .editable, .wf-radio .editable { flex: 1; overflow: hidden; display: block; }
+
+        /* Tables */
+        .table-container { position: relative; width: max-content; height: max-content; }
+        .wf-table { border-collapse: collapse; background: var(--element-bg); width: 100%; height: 100%; color: var(--text-color); font-size: inherit; }
+        .wf-table th, .wf-table td { border: 2px solid var(--border-color); padding: 8px; min-width: 40px; min-height: 20px; text-align: center; overflow: hidden; position: relative; word-break: break-all; }
+        .wf-table th { background-color: #f0f0f0; }
+        .table-controls { position: absolute; display: none; background: var(--border-color); color: white; border: none; cursor: pointer; font-weight: bold; z-index: 5; align-items: center; justify-content: center; }
+        .add-col-btn { top: 0; width: 20px; height: 100%; right: -25px; }
+        .add-row-btn { left: 0; height: 20px; width: 100%; bottom: -25px; }
+        .add-row-btn:hover, .add-col-btn:hover { background: #222; }
+        .table-resizer { position: absolute; background: var(--select-color); z-index: 150; display: none; pointer-events: none; }
+        .table-resizer.v { width: 3px; margin-left: -1px; }
+        .table-resizer.h { height: 3px; margin-top: -1px; }
+        .selected-cell { outline: 3px solid var(--snap-color) !important; outline-offset: -3px; background-color: rgba(76, 175, 80, 0.1) !important; }
+
+        #size-tooltip { position: fixed; background: rgba(0,0,0,0.85); color: white; padding: 4px 8px; font-size: 12px; font-weight: bold; border-radius: 4px; pointer-events: none; z-index: 10000; display: none; font-family: sans-serif; }
+
+        /* Modals */
+        #help-btn { position: fixed; bottom: 25px; right: 25px; width: 45px; height: 45px; background: var(--select-color); color: white; border: none; border-radius: 50%; font-size: 24px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1000; display: flex; align-items: center; justify-content: center; transition: transform 0.2s, background 0.2s; }
+        #help-btn:hover { transform: scale(1.1); background: #1976D2; }
+        #help-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        #help-modal.visible { display: flex; }
+        .modal-content { background: var(--element-bg); width: 600px; max-width: 90%; max-height: 85vh; border-radius: 8px; border: 2px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; }
+        .modal-header { padding: 15px 20px; background: #e0e0e0; border-bottom: 2px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 18px; }
+        .modal-close { background: transparent; border: none; font-size: 24px; cursor: pointer; color: #333; line-height: 1; }
+        .modal-body { padding: 20px; overflow-y: auto; font-size: 14px; line-height: 1.6; }
+        .modal-body h3 { margin-top: 15px; margin-bottom: 5px; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+        .modal-body h3:first-child { margin-top: 0; }
+        .modal-body ul { margin-top: 5px; padding-left: 20px; }
+        .modal-body li { margin-bottom: 8px; }
+        kbd { background: #eee; border: 1px solid #ccc; border-radius: 4px; padding: 2px 6px; font-family: monospace; font-size: 12px; font-weight: bold; }
+    </style>
 </head>
 <body>
+
     <div id="toolbar">
         <h2>UI Elements</h2>
         <div class="tools-grid">
@@ -30,8 +210,11 @@
             <div class="tool-item" draggable="true" data-type="rectangle" title="Rectangle Shape"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" stroke="currentColor" fill="none" stroke-width="2"/></svg></div>
             <div class="tool-item" draggable="true" data-type="circle" title="Circle Shape"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke="currentColor" fill="none" stroke-width="2"/></svg></div>
             <div class="tool-item" draggable="true" data-type="diamond" title="Diamond Shape"><svg viewBox="0 0 24 24"><polygon points="12,3 21,12 12,21 3,12" stroke="currentColor" fill="none" stroke-width="2"/></svg></div>
+            <div class="tool-item" draggable="true" data-type="line" title="Line Connector"><svg viewBox="0 0 24 24"><line x1="4" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2"/></svg></div>
         </div>
+        
         <hr style="width: 100%; border-color: var(--border-color); margin-top: 20px;">
+        
         <button id="export-btn" class="btn-action">Export to PNG</button>
         <div style="display: flex; gap: 5px; margin-top: 10px;">
             <button id="save-btn" class="btn-action" style="flex: 1; margin-top: 0; background: #2196F3;">Save JSON</button>
@@ -39,10 +222,15 @@
             <input type="file" id="load-input" accept=".json" style="display: none;">
         </div>
         <button id="clear-btn" class="btn-action" style="background: #E91E63; margin-top: 10px; width: 100%;">Clear Board</button>
-		<a href="https://buymeacoffee.com/tamdoan" target="_blank" class="bmc-btn">
-            <svg style="width: 18px; height: 18px; margin-right: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
-            Buy me a coffee
-        </a>
+
+        <div style="font-size: 11px; margin-top: 20px; color: #666; text-align: center;">
+            <b>CTRL+S</b> to Quick Save<br>
+            <b>CTRL+Z</b> to Undo/Redo<br>
+            <b>CTRL+V</b> to Paste Images/SVG<br>
+            <b>Arrow Keys</b> to Nudge<br>
+            Hold <b>SHIFT</b> to Scale Ratio<br>
+            <b>Middle Click / Spacebar</b> to Pan
+        </div>
     </div>
     
     <div id="sidebar-toggle" title="Toggle Sidebar">◀</div>
@@ -64,6 +252,7 @@
                 <ul>
                     <li><b>Draw Lines:</b> Hover over a selected element to reveal blue connection nodes. Click and drag from a node to another element to draw a connector line.</li>
                     <li><b>Edit Lines:</b> Click a line to select it. Use the Properties Panel on the right to change it to Straight, Curved, or Orthogonal (Elbow), and add arrows or dots to the ends.</li>
+                    <li><b>Edit Routing:</b> Click a line, then drag the blue nodes to adjust its path. You can drag the transparent nodes on the line segments to add new routing corners. Double click a blue node to delete it.</li>
                 </ul>
 
                 <h3>🎨 Properties Panel (Right Side)</h3>
@@ -101,39 +290,816 @@
     <div id="properties-panel" class="hidden">
         <div id="element-props">
             <strong>Actions</strong>
-            <div style="display:flex; gap:5px;"><button class="icon-btn" id="prop-group">Group</button><button class="icon-btn" id="prop-ungroup">Ungroup</button></div>
+            <div style="display:flex; gap:5px;">
+                <button class="icon-btn" id="prop-group">Group</button>
+                <button class="icon-btn" id="prop-ungroup">Ungroup</button>
+            </div>
+            <div style="display:flex; gap:5px; margin-top:5px;">
+                <button class="icon-btn" id="prop-copy-image" title="Copy Selected to Clipboard as Image" style="background: #FFEB3B; border-color:#FBC02D;">📸 Copy Image</button>
+            </div>
+            
             <strong style="margin-top:10px; display:block;">Layer</strong>
-            <div style="display:flex; gap:5px;"><button class="icon-btn" id="prop-front">⇈</button><button class="icon-btn" id="prop-forward">↑</button><button class="icon-btn" id="prop-backward">↓</button><button class="icon-btn" id="prop-back">⇊</button></div>
+            <div style="display:flex; gap:5px;">
+                <button class="icon-btn" id="prop-front" title="Bring to Front">⇈</button>
+                <button class="icon-btn" id="prop-forward" title="Bring Forward">↑</button>
+                <button class="icon-btn" id="prop-backward" title="Send Backward">↓</button>
+                <button class="icon-btn" id="prop-back" title="Send to Back">⇊</button>
+            </div>
+            
             <strong style="margin-top:10px; display:block;">Dimensions & Text</strong>
-            <div style="display: flex; gap: 5px; align-items: center;"><label style="display:flex; align-items:center; gap:2px; flex:1;">W: <input type="number" id="prop-w"></label><button class="icon-btn" id="prop-lock-ratio" style="flex:0 0 auto; padding: 4px 6px;">🔓</button><label style="display:flex; align-items:center; gap:2px; flex:1;">H: <input type="number" id="prop-h"></label></div>
-            <div style="display: flex; gap: 5px; align-items: center; margin-top: 5px;"><label style="display:flex; align-items:center; gap:5px; flex:0 0 auto;">Size: <input type="number" id="prop-fontsize" value="14" style="width: 50px;"></label><div style="display:flex; gap:2px; flex:1;"><button class="icon-btn" id="prop-bold" style="font-weight:bold;">B</button><button class="icon-btn" id="prop-italic" style="font-style:italic;">I</button><button class="icon-btn" id="prop-underline" style="text-decoration:underline;">U</button><button class="icon-btn" id="prop-strike" style="text-decoration:line-through;">S</button></div></div>
+            <div style="display: flex; gap: 5px; align-items: center;">
+                <label style="display:flex; align-items:center; gap:2px; flex:1;">W: <input type="number" id="prop-w"></label>
+                <button class="icon-btn" id="prop-lock-ratio" style="flex:0 0 auto; padding: 4px 6px;" title="Lock Aspect Ratio">🔓</button>
+                <label style="display:flex; align-items:center; gap:2px; flex:1;">H: <input type="number" id="prop-h"></label>
+            </div>
+            <div style="display: flex; gap: 5px; align-items: center; margin-top: 5px;">
+                <label style="display:flex; align-items:center; gap:5px; flex:0 0 auto;">Size: <input type="number" id="prop-fontsize" value="14" style="width: 50px;"></label>
+                <div style="display:flex; gap:2px; flex:1;">
+                    <button class="icon-btn" id="prop-bold" style="font-weight:bold;" title="Bold">B</button>
+                    <button class="icon-btn" id="prop-italic" style="font-style:italic;" title="Italic">I</button>
+                    <button class="icon-btn" id="prop-underline" style="text-decoration:underline;" title="Underline">U</button>
+                    <button class="icon-btn" id="prop-strike" style="text-decoration:line-through;" title="Strikethrough">S</button>
+                </div>
+            </div>
+            <div style="display:flex; gap:2px; flex:1; margin-top:5px;">
+                <button class="icon-btn" id="prop-align-left" title="Align Left">⫷</button>
+                <button class="icon-btn" id="prop-align-center" title="Align Center">⫸⫷</button>
+                <button class="icon-btn" id="prop-align-right" title="Align Right">⫸</button>
+            </div>
+
             <hr style="width: 100%; border-color: var(--border-color); margin: 10px 0;">
             <strong>State</strong>
-            <select id="state-select"><option value="default">Default</option><option value="focus">Focus</option><option value="active">Active</option><option value="readonly">Read-only</option><option value="disabled">Disabled</option><option value="expanded">Expanded</option></select>
+            <select id="state-select">
+                <option value="default">Default</option><option value="focus">Focus</option><option value="active">Active (Pressed)</option><option value="readonly">Read-only</option><option value="disabled">Disabled</option><option value="expanded">Expanded (Dropdown Only)</option>
+            </select>
             <label id="prop-checked-wrapper" style="display:none; align-items:center; gap:8px; margin-top:10px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="prop-checked" style="width:16px; height:16px;"> Checked State</label>
-            <div id="dropdown-settings" style="display: none; flex-direction: column; gap: 5px; margin-top: 10px;"><strong>Options</strong><textarea id="dropdown-options" rows="3"></textarea></div>
-            <div id="tab-settings" style="display: none; flex-direction: column; gap: 5px; margin-top: 10px;"><strong>Tabs</strong><textarea id="tab-options" rows="2"></textarea><strong>Active Tab</strong><input type="number" id="tab-active-index" min="0" value="0"></div>
-            <div id="table-settings" style="display: none; flex-direction: column; gap: 5px; margin-top: 10px;"><strong>Columns</strong><textarea id="table-columns" rows="3"></textarea></div>
-            <div id="cell-settings" style="display: none; flex-direction: column; gap: 5px; margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 10px;"><strong>Cell Type</strong><select id="cell-type"><option value="text">Text</option><option value="button">Button</option><option value="dropdown">Dropdown</option><option value="paragraph">Paragraph</option></select></div>
+            
+            <div id="dropdown-settings" style="display: none; flex-direction: column; gap: 5px; margin-top: 10px;"><strong>Dropdown Options</strong><textarea id="dropdown-options" rows="3" placeholder="Option 1, Option 2..."></textarea></div>
+            <div id="tab-settings" style="display: none; flex-direction: column; gap: 5px; margin-top: 10px;"><strong>Tabs (Comma Separated)</strong><textarea id="tab-options" rows="2" placeholder="Tab 1, Tab 2..."></textarea><strong>Active Tab Index (starts at 0)</strong><input type="number" id="tab-active-index" min="0" value="0"></div>
+            <div id="table-settings" style="display: none; flex-direction: column; gap: 5px; margin-top: 10px;"><strong>Table Columns</strong><textarea id="table-columns" rows="3" placeholder="Col 1, Col 2..."></textarea></div>
+            <div id="cell-settings" style="display: none; flex-direction: column; gap: 5px; margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 10px;"><strong>Data Cell Type</strong><select id="cell-type"><option value="text">Text (Default)</option><option value="button">Button</option><option value="dropdown">Dropdown</option><option value="paragraph">Paragraph</option></select></div>
         </div>
         <div id="connector-props" style="display: none; flex-direction: column; gap: 10px;">
-            <strong>Connector</strong>
-            <label>Style:<select id="conn-type"><option value="elbow">Elbow</option><option value="straight">Straight</option><option value="curve">Curve</option></select></label>
-            <div style="display: flex; gap: 10px;"><label style="flex:1;">Start:<select id="conn-start"><option value="none">None</option><option value="url(#arrow-start)">Arrow</option><option value="url(#dot-start)">Dot</option><option value="url(#circle-start)">Circle</option></select></label><label style="flex:1;">End:<select id="conn-end"><option value="url(#arrow-end)">Arrow</option><option value="none">None</option><option value="url(#dot-end)">Dot</option><option value="url(#circle-end)">Circle</option></select></label></div>
+            <strong>Connector Settings</strong>
+            <label>Line Style:<select id="conn-type"><option value="elbow">Elbow (Orthogonal)</option><option value="straight">Straight</option><option value="curve">Curved</option></select></label>
+            <label>Thickness:<input type="number" id="conn-weight" min="1" max="10" value="3"></label>
+            <label>Pattern:<select id="conn-style"><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="dotted">Dotted</option></select></label>
+            <label>Text Label:<input type="text" id="conn-text" placeholder="Optional text..."></label>
+            <div style="display: flex; gap: 10px;">
+                <label style="flex:1;">Start:<select id="conn-start"><option value="none">None</option><option value="url(#arrow-start)">Arrow</option><option value="url(#dot-start)">Solid Dot</option><option value="url(#circle-start)">Open Circle</option></select></label>
+                <label style="flex:1;">End:<select id="conn-end"><option value="url(#arrow-end)">Arrow</option><option value="none">None</option><option value="url(#dot-end)">Solid Dot</option><option value="url(#circle-end)">Open Circle</option></select></label>
+            </div>
         </div>
     </div>
 
     <div id="viewport" tabindex="0">
         <div id="board">
-            <div id="guide-v" class="guide-line v"></div><div id="guide-h" class="guide-line h"></div>
-            <div id="table-resizer-v" class="table-resizer v"></div><div id="table-resizer-h" class="table-resizer h"></div>
-            <svg id="connections-layer"><defs><marker id="arrow-end" markerWidth="16" markerHeight="16" refX="14" refY="8" orient="auto" markerUnits="userSpaceOnUse"><path d="M 2 2 L 14 8 L 2 14 z" fill="var(--border-color)"/></marker><marker id="arrow-start" markerWidth="16" markerHeight="16" refX="2" refY="8" orient="auto" markerUnits="userSpaceOnUse"><path d="M 14 2 L 2 8 L 14 14 z" fill="var(--border-color)"/></marker><marker id="dot-end" markerWidth="16" markerHeight="16" refX="8" refY="8" orient="auto" markerUnits="userSpaceOnUse"><circle cx="8" cy="8" r="5" fill="var(--border-color)"/></marker><marker id="dot-start" markerWidth="16" markerHeight="16" refX="8" refY="8" orient="auto" markerUnits="userSpaceOnUse"><circle cx="8" cy="8" r="5" fill="var(--border-color)"/></marker><marker id="circle-end" markerWidth="16" markerHeight="16" refX="8" refY="8" orient="auto" markerUnits="userSpaceOnUse"><circle cx="8" cy="8" r="5" fill="#ffffff" stroke="var(--border-color)" stroke-width="2"/></marker><marker id="circle-start" markerWidth="16" markerHeight="16" refX="8" refY="8" orient="auto" markerUnits="userSpaceOnUse"><circle cx="8" cy="8" r="5" fill="#ffffff" stroke="var(--border-color)" stroke-width="2"/></marker></defs></svg>
+            <div id="guide-v" class="guide-line v"></div>
+            <div id="guide-h" class="guide-line h"></div>
+            <div id="table-resizer-v" class="table-resizer v"></div>
+            <div id="table-resizer-h" class="table-resizer h"></div>
+            <svg id="connections-layer">
+                <defs>
+                    <marker id="arrow-end" markerWidth="16" markerHeight="16" refX="14" refY="8" orient="auto" markerUnits="userSpaceOnUse"><path d="M 2 2 L 14 8 L 2 14 z" fill="var(--border-color)" /></marker>
+                    <marker id="arrow-start" markerWidth="16" markerHeight="16" refX="2" refY="8" orient="auto" markerUnits="userSpaceOnUse"><path d="M 14 2 L 2 8 L 14 14 z" fill="var(--border-color)" /></marker>
+                    <marker id="dot-end" markerWidth="16" markerHeight="16" refX="8" refY="8" orient="auto" markerUnits="userSpaceOnUse"><circle cx="8" cy="8" r="5" fill="var(--border-color)" /></marker>
+                    <marker id="dot-start" markerWidth="16" markerHeight="16" refX="8" refY="8" orient="auto" markerUnits="userSpaceOnUse"><circle cx="8" cy="8" r="5" fill="var(--border-color)" /></marker>
+                    <marker id="circle-end" markerWidth="16" markerHeight="16" refX="8" refY="8" orient="auto" markerUnits="userSpaceOnUse"><circle cx="8" cy="8" r="5" fill="#ffffff" stroke="var(--border-color)" stroke-width="2" /></marker>
+                    <marker id="circle-start" markerWidth="16" markerHeight="16" refX="8" refY="8" orient="auto" markerUnits="userSpaceOnUse"><circle cx="8" cy="8" r="5" fill="#ffffff" stroke="var(--border-color)" stroke-width="2" /></marker>
+                </defs>
+            </svg>
+            
+            <div id="connector-handles"></div>
+            
             <div id="marquee"></div>
         </div>
     </div>
 
     <script>
-        const viewport=document.getElementById('viewport'),board=document.getElementById('board'),svgLayer=document.getElementById('connections-layer'),marquee=document.getElementById('marquee'),propertiesPanel=document.getElementById('properties-panel'),elPropsPanel=document.getElementById('element-props'),connPropsPanel=document.getElementById('connector-props'),sizeTooltip=document.getElementById('size-tooltip'),sidebarToggle=document.getElementById('sidebar-toggle'),toolbar=document.getElementById('toolbar'),helpBtn=document.getElementById('help-btn'),helpModal=document.getElementById('help-modal'),closeModal=document.getElementById('close-modal');helpBtn.addEventListener('click',()=>helpModal.classList.add('visible'));closeModal.addEventListener('click',()=>helpModal.classList.remove('visible'));helpModal.addEventListener('click',(e)=>{if(e.target===helpModal)helpModal.classList.remove('visible')});let scale=1,panX=-4000,panY=-4000,isPanning=!1,isMarquee=!1,spacePressed=!1,startClientX=0,startClientY=0,startBoardX=0,startBoardY=0,isResizingElement=!1,resizeTarget=null,resizeDir='',startWidth=0,startHeight=0,startLeft=0,startTop=0,startRatio=1,isRatioLocked=!1,hoveredTableEdge=null,isResizingTable=!1,tableResizeData=null;let selectedElements=new Set,selectedConnectors=new Set,selectedCell=null,draggedElementsData=[],isDraggingElements=!1,clipboard=[],snapTargets=[],isDrawingConnection=!1,connectionStartEl=null,connectionStartNode=null,tempConnectionPath=null,connections=[],historyStack=[],historyIndex=-1;window.addEventListener('paste',(e)=>{if(document.activeElement&&document.activeElement.isContentEditable)return;const t=e.clipboardData.items;let n=!1;const r=viewport.getBoundingClientRect(),o=getBoardCoords(r.left+r.width/2,r.top+r.height/2);for(let e=0;e<t.length;e++){if(-1!==t[e].type.indexOf('image')){const r=new FileReader;r.onload=(e)=>{createComponent('image',o.x-50,o.y-50,e.target.result)},r.readAsDataURL(t[e].getAsFile()),n=!0;break}}if(!n){const t=e.clipboardData.getData('text');t&&t.trim().toLowerCase().startsWith('<svg')&&createComponent('image',o.x-50,o.y-50,'data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(t.trim()))))}});document.body.addEventListener('dragover',e=>e.preventDefault());document.body.addEventListener('drop',e=>{if(e.dataTransfer.files&&e.dataTransfer.files.length>0){e.preventDefault(),e.stopPropagation();const t=e.dataTransfer.files[0];if(t.name.endsWith('.json')||'application/json'===t.type){const e=new FileReader;e.onload=(e)=>{loadBoardJSON(e.target.result),historyStack=[],historyIndex=-1,saveHistory()},e.readAsText(t)}}});sidebarToggle.addEventListener('click',function(){toolbar.classList.toggle('collapsed'),this.classList.toggle('collapsed'),this.innerText=toolbar.classList.contains('collapsed')?'▶':'◀'});function getBoardJSON(){const e={elements:[],connections:[]};return document.querySelectorAll('.canvas-element').forEach(t=>{t.id||(t.id='el_'+Date.now()+Math.floor(1e3*Math.random()));const n=t.querySelector('.wf-component'),r=Array.from(t.classList).find(e=>e.startsWith('state-'));e.elements.push({id:t.id,type:t.dataset.type,x:parseFloat(t.style.left)||0,y:parseFloat(t.style.top)||0,w:t.style.width,h:t.style.height,state:r?r.replace('state-',''):'default',options:t.dataset.options||'',columns:t.dataset.columns||'',groupId:t.dataset.groupId||'',tabs:t.dataset.tabs||'',activeTab:t.dataset.activeTab||'0',fontSize:t.style.fontSize||'',htmlData:btoa(encodeURIComponent(n.outerHTML))})}),connections.forEach(t=>{e.connections.push({id:t.id,from:t.from.id,to:t.to.id,fromNode:t.fromNode,toNode:t.toNode,type:t.type,startMarker:t.startMarker,endMarker:t.endMarker})}),JSON.stringify(e)}function loadBoardJSON(e){if(!e)return;try{const t=JSON.parse(e);document.querySelectorAll('.canvas-element').forEach(e=>e.remove()),connections=[],svgLayer.innerHTML=svgLayer.querySelector('defs').outerHTML,clearSelection(),clearConnectorSelection(),t.elements.forEach(e=>{const t=document.createElement('div');t.className='canvas-element',t.id=e.id,t.dataset.type=e.type,t.style.left=e.x+'px',t.style.top=e.y+'px',e.w&&(t.style.width=e.w),e.h&&(t.style.height=e.h),e.fontSize&&(t.style.fontSize=e.fontSize),e.state&&'default'!==e.state&&t.classList.add('state-'+e.state),e.options&&(t.dataset.options=e.options),e.columns&&(t.dataset.columns=e.columns),e.groupId&&(t.dataset.groupId=e.groupId),e.tabs&&(t.dataset.tabs=e.tabs),e.activeTab&&(t.dataset.activeTab=e.activeTab);try{t.innerHTML=decodeURIComponent(atob(e.htmlData))}catch(e){t.innerHTML=e.htmlData}'table'!==t.dataset.type&&t.insertAdjacentHTML('beforeend','<div class="resize-handle nw"></div><div class="resize-handle ne"></div><div class="resize-handle sw"></div><div class="resize-handle se"></div><div class="resize-handle n"></div><div class="resize-handle s"></div><div class="resize-handle e"></div><div class="resize-handle w"></div>'),t.insertAdjacentHTML('beforeend','<div class="conn-node top"></div><div class="conn-node bottom"></div><div class="conn-node left"></div><div class="conn-node right"></div>'),board.appendChild(t),'dropdown'===t.dataset.type&&renderDropdownList(t),'tabs'===t.dataset.type&&renderTabs(t)}),t.connections.forEach(e=>{const t=document.getElementById(e.from),n=document.getElementById(e.to);if(t&&n){const r=document.createElementNS('http://www.w3.org/2000/svg','path');r.classList.add('wf-connector'),r.setAttribute('marker-start',e.startMarker),r.setAttribute('marker-end',e.endMarker),svgLayer.appendChild(r);const o={id:e.id,from:t,to:n,fromNode:e.fromNode,toNode:e.toNode,pathNode:r,type:e.type,startMarker:e.startMarker,endMarker:e.endMarker};r.dataset.connId=o.id,connections.push(o)}}),updateConnections(),updatePropertiesPanel()}catch(e){console.error('History Load Error:',e)}}function saveHistory(){const e=getBoardJSON();if(historyIndex>=0&&historyStack[historyIndex]===e)return;historyStack=historyStack.slice(0,historyIndex+1),historyStack.push(e),historyStack.length>50?historyStack.shift():historyIndex++;try{localStorage.setItem('wireframe_autosave',e)}catch(e){}}window.addEventListener('load',()=>{const e=localStorage.getItem('wireframe_autosave');if(e)try{loadBoardJSON(e),historyStack=[e],historyIndex=0}catch(e){saveHistory()}else saveHistory()});function updateBoardTransform(){board.style.transform=`translate(${panX}px, ${panY}px) scale(${scale})`}updateBoardTransform();function getBoardCoords(e,t){const n=board.getBoundingClientRect();return{x:(e-n.left)/scale,y:(t-n.top)/scale}}function getShapeEdges(e){const t=parseFloat(e.style.left),n=parseFloat(e.style.top),r=e.offsetWidth,o=e.offsetHeight;return{top:{x:t+r/2,y:n},bottom:{x:t+r/2,y:n+o},left:{x:t,y:n+o/2},right:{x:t+r,y:n+o/2},center:{x:t+r/2,y:n+o/2}}}function calculatePath(e,t,n,r,o,a=0,l=0){const c=getShapeEdges(e),s=getShapeEdges(t);let i={x:c[r].x+a,y:c[r].y+l},d={x:s[o].x+a,y:s[o].y+l};if('straight'===n)return`M ${i.x} ${i.y} L ${d.x} ${d.y}`;if('curve'===n){const e=(e,t,n)=>'top'===t?{x:e.x,y:e.y-n}:'bottom'===t?{x:e.x,y:e.y+n}:'left'===t?{x:e.x-n,y:e.y}:{x:e.x+n,y:e.y},a=.5*Math.max(Math.abs(d.x-i.x),Math.abs(d.y-i.y)),l=e(i,r,a),c=e(d,o,a);return`M ${i.x} ${i.y} C ${l.x} ${l.y}, ${c.x} ${c.y}, ${d.x} ${d.y}`}const p=(e,t)=>'top'===t?{x:e.x,y:e.y-20}:'bottom'===t?{x:e.x,y:e.y+20}:'left'===t?{x:e.x-20,y:e.y}:{x:e.x+20,y:e.y},u=p(i,r),m=p(d,o),y=u.x+(m.x-u.x)/2,x=u.y+(m.y-u.y)/2;let h=`M ${i.x} ${i.y} L ${u.x} ${u.y} `;const f=e=>'top'===e||'bottom'===e;return h+=f(r)&&f(o)?`L ${u.x} ${x} L ${m.x} ${x} `:!f(r)&&!f(o)?`L ${y} ${u.y} L ${y} ${m.y} `:f(r)?`L ${u.x} ${m.y} `:`L ${m.x} ${u.y} `,h+=`L ${m.x} ${m.y} L ${d.x} ${d.y}`,h}function updateConnections(){connections.forEach(e=>{if(!board.contains(e.from)||!board.contains(e.to))return void e.pathNode.remove();e.pathNode.setAttribute('d',calculatePath(e.from,e.to,e.type,e.fromNode,e.toNode))}),connections=connections.filter(e=>board.contains(e.from)&&board.contains(e.to))}function createConnector(e,t,n,r){const o=document.createElementNS('http://www.w3.org/2000/svg','path');o.classList.add('wf-connector'),o.setAttribute('marker-end','url(#arrow-end)'),svgLayer.appendChild(o);const a={id:'conn_'+Date.now()+Math.floor(1e3*Math.random()),from:e,to:t,fromNode:n,toNode:r,pathNode:o,type:'elbow',startMarker:'none',endMarker:'url(#arrow-end)'};o.dataset.connId=a.id,connections.push(a),updateConnections()}function renderTable(e){let t=(e.dataset.columns||'Header 1, Header 2').split(',');if(0===t.length||1===t.length&&''===t[0].trim()&&(t=['Header']),!e.querySelector('tbody'))return;const n=Array.from(e.querySelector('tbody').querySelectorAll('tr')),r=Array.from(n[0].querySelectorAll('th'));n[0].innerHTML=t.map((e,t)=>{let n=r[t]&&r[t].style.width?`width:${r[t].style.width};`:'';return`<th class="editable" style="${n}">${e.trim()||' '}</th>`}).join('');for(let e=1;e<n.length;e++){const r=Array.from(n[e].querySelectorAll('td'));n[e].innerHTML=t.map((e,t)=>{const n=r[t]?r[t].innerHTML:'<span class="editable">Data</span>',o=r[t]?r[t].dataset.cellType||'text':'text';return`<td data-cell-type="${o}">${n}</td>`}).join('')}}function renderDropdownList(e){const t=(e.dataset.options||'').split(',').map(e=>e.trim()).filter(e=>e),n=e.querySelector('.wf-dropdown-list');if(n){n.innerHTML=t.slice(1).map(e=>`<div class="wf-dropdown-item">${e}</div>`).join('');const r=e.querySelector('.editable');r&&(r.innerText=t[0]||'Select Option')}}function renderTabs(e){let t=(e.dataset.tabs||'Tab 1, Tab 2').split(',');0===t.length||1===t.length&&''===t[0].trim()&&(t=['Tab']);let n=parseInt(e.dataset.activeTab||'0');n>=t.length&&(n=0);const r=e.querySelector('.wf-tab-header');r&&(r.innerHTML=t.map((e,t)=>` <div class="wf-tab-item ${t===n?'active':''}"> <span class="editable">${e.trim()||' '}</span> </div> `).join(''))}function autoScaleWrapper(e){'table'===e.dataset.type&&(e.style.width='max-content',e.style.height='max-content',updateConnections())}function createComponent(e,t,n,r=null){const o=document.createElement('div');o.className='canvas-element',o.id='el_'+Date.now()+Math.floor(1e3*Math.random()),o.style.left=`${t}px`,o.style.top=`${n}px`,o.dataset.type=e;let a='';switch(e){case'browser':o.style.width='600px',o.style.height='400px',o.style.zIndex='0',a='<div class="wf-component wf-browser"><div class="browser-header"><div class="browser-dots"><span></span><span></span><span></span></div><div class="browser-url editable">https://www.website.com</div></div><div class="browser-content"></div></div>';break;case'mobile':o.style.width='320px',o.style.height='600px',o.style.zIndex='0',a='<div class="wf-component wf-mobile"><div class="mobile-notch"></div><div class="mobile-content"></div></div>';break;case'tabs':o.style.width='300px',o.style.height='150px',o.style.zIndex='1',o.dataset.tabs='Tab 1, Tab 2, Tab 3',o.dataset.activeTab='0',a='<div class="wf-component wf-tabs" style="font-weight:bold; height:100%;"><div class="wf-tab-header"></div><div class="wf-tab-content" style="flex:1;"></div></div>';break;case'text-label':o.style.width='100px',o.style.height='30px',a='<div class="wf-component wf-label"><span class="editable">Label Text</span></div>';break;case'button':o.style.width='140px',o.style.height='40px',a='<div class="wf-component wf-btn" style="font-weight:bold;"><span class="editable">Action Button</span></div>';break;case'text-field':o.style.width='160px',o.style.height='40px',a='<div class="wf-component wf-input"><span class="editable">Text Input...</span></div>';break;case'dropdown':o.style.width='160px',o.style.height='40px',o.dataset.options='Select Option,Option 2,Option 3',a='<div class="wf-component wf-select"><span class="editable">Select Option</span></div><div class="wf-dropdown-list"></div>';break;case'checkbox':o.style.width='140px',o.style.height='30px',a='<div class="wf-component wf-checkbox"><div class="box"></div><span class="editable">Checkbox Label</span></div>';break;case'radio':o.style.width='140px',o.style.height='30px',a='<div class="wf-component wf-radio"><div class="circle"></div><span class="editable">Radio Label</span></div>';break;case'paragraph':o.style.width='200px',o.style.height='60px',a='<div class="wf-component wf-p editable">Wireframe text paragraph. Double click to edit me.</div>';break;case'tooltip':o.style.width='120px',o.style.height='30px',a='<div class="wf-component wf-tooltip"><span class="editable">Tooltip info...</span></div>';break;case'sticky':o.style.width='120px',o.style.height='120px',a='<div class="wf-component wf-sticky"><span class="editable">Note</span></div>';break;case'annotator':o.style.width='40px',o.style.height='40px',a='<div class="wf-component wf-annotator" style="font-weight:bold; border-radius: 50%;"><span class="editable">1</span></div>';break;case'table':o.dataset.columns='Header 1, Header 2',a='<div class="wf-component table-container"><table class="wf-table"><tbody><tr><th class="editable">Header 1</th><th class="editable">Header 2</th></tr><tr><td data-cell-type="text"><span class="editable">Data A</span></td><td data-cell-type="text"><span class="editable">Data B</span></td></tr></tbody></table><button class="table-controls add-col-btn">+</button><button class="table-controls add-row-btn">+</button></div>';break;case'rectangle':o.style.width='150px',o.style.height='100px',a='<div class="wf-component wf-rect"><span class="editable"></span></div>';break;case'circle':o.style.width='100px',o.style.height='100px',a='<div class="wf-component wf-circ"><span class="editable"></span></div>';break;case'diamond':o.style.width='120px',o.style.height='120px',a='<div class="wf-component wf-diam"><svg class="bg-svg" preserveAspectRatio="none" viewBox="0 0 100 100" style="position:absolute; width:100%; height:100%; top:0; left:0;"><polygon points="50,2 98,50 50,98 2,50" fill="var(--element-bg)" stroke="var(--border-color)" stroke-width="4"/></svg><div class="wf-diam-container"><span class="editable"></span></div></div>';break;case'image':o.style.width='200px',o.style.height='200px',a=`<img class="wf-component wf-image" src="${r}" style="width:100%; height:100%; object-fit:contain;" draggable="false" />`}o.innerHTML=a,'table'!==e&&o.insertAdjacentHTML('beforeend','<div class="resize-handle nw"></div><div class="resize-handle ne"></div><div class="resize-handle sw"></div><div class="resize-handle se"></div><div class="resize-handle n"></div><div class="resize-handle s"></div><div class="resize-handle e"></div><div class="resize-handle w"></div>'),o.insertAdjacentHTML('beforeend','<div class="conn-node top"></div><div class="conn-node bottom"></div><div class="conn-node left"></div><div class="conn-node right"></div>'),board.appendChild(o),'dropdown'===e&&renderDropdownList(o),'table'===e&&renderTable(o),'tabs'===e&&renderTabs(o),clearSelection(),clearConnectorSelection(),selectElement(o),updatePropertiesPanel(),saveHistory()}function selectElement(e){const t=e.dataset.groupId;t?document.querySelectorAll(`.canvas-element[data-group-id="${t}"]`).forEach(e=>{selectedElements.add(e),e.classList.add('selected')}):(selectedElements.add(e),e.classList.add('selected'))}function toggleSelection(e){const t=e.dataset.groupId;selectedElements.has(e)?t?document.querySelectorAll(`.canvas-element[data-group-id="${t}"]`).forEach(e=>{selectedElements.delete(e),e.classList.remove('selected')}):(selectedElements.delete(e),e.classList.remove('selected')):selectElement(e)}function clearSelection(){selectedElements.forEach(e=>e.classList.remove('selected')),selectedElements.clear(),document.querySelectorAll('.selected-cell').forEach(e=>e.classList.remove('selected-cell')),selectedCell=null}function selectConnector(e){selectedConnectors.add(e),e.pathNode.classList.add('selected'),updatePropertiesPanel()}function clearConnectorSelection(){selectedConnectors.forEach(e=>e.pathNode.classList.remove('selected')),selectedConnectors.clear()}function updatePropertiesPanel(){if(selectedElements.size>0){propertiesPanel.classList.remove('hidden'),elPropsPanel.style.display='block',connPropsPanel.style.display='none';const e=Array.from(selectedElements)[0];document.getElementById('prop-w').value=Math.round(e.offsetWidth),document.getElementById('prop-h').value=Math.round(e.offsetHeight);let t=window.getComputedStyle(e).fontSize;document.getElementById('prop-fontsize').value=parseInt(t)||14;const n=e.querySelector('.wf-component');if(n){const e=getComputedStyle(n);document.getElementById('prop-bold').classList.toggle('active','bold'===n.style.fontWeight||'700'===e.fontWeight||'bold'===e.fontWeight),document.getElementById('prop-italic').classList.toggle('active','italic'===n.style.fontStyle||'italic'===e.fontStyle),document.getElementById('prop-underline').classList.toggle('active',(n.style.textDecoration||'').includes('underline')),document.getElementById('prop-strike').classList.toggle('active',(n.style.textDecoration||'').includes('line-through'))}let r='default';['disabled','focus','active','expanded','readonly'].forEach(t=>{e.classList.contains('state-'+t)&&(r=t)}),document.getElementById('state-select').value=r,'checkbox'===e.dataset.type||'radio'===e.dataset.type?(document.getElementById('prop-checked-wrapper').style.display='flex',document.getElementById('prop-checked').checked=n&&n.classList.contains('is-checked')):document.getElementById('prop-checked-wrapper').style.display='none','dropdown'===e.dataset.type?(document.getElementById('dropdown-settings').style.display='flex',document.getElementById('dropdown-options').value=e.dataset.options||'',document.getElementById('table-settings').style.display='none',document.getElementById('cell-settings').style.display='none',document.getElementById('tab-settings').style.display='none'):'table'===e.dataset.type?(document.getElementById('table-settings').style.display='flex',document.getElementById('table-columns').value=e.dataset.columns||'',document.getElementById('dropdown-settings').style.display='none',document.getElementById('tab-settings').style.display='none',selectedCell?(document.getElementById('cell-settings').style.display='flex',document.getElementById('cell-type').value=selectedCell.dataset.cellType||'text'):document.getElementById('cell-settings').style.display='none'):'tabs'===e.dataset.type?(document.getElementById('tab-settings').style.display='flex',document.getElementById('tab-options').value=e.dataset.tabs||'',document.getElementById('tab-active-index').value=e.dataset.activeTab||'0',document.getElementById('dropdown-settings').style.display='none',document.getElementById('table-settings').style.display='none',document.getElementById('cell-settings').style.display='none'):(document.getElementById('dropdown-settings').style.display='none',document.getElementById('table-settings').style.display='none',document.getElementById('cell-settings').style.display='none',document.getElementById('tab-settings').style.display='none')}else if(selectedConnectors.size>0){propertiesPanel.classList.remove('hidden'),elPropsPanel.style.display='none',connPropsPanel.style.display='flex';const e=Array.from(selectedConnectors)[0];document.getElementById('conn-type').value=e.type,document.getElementById('conn-start').value=e.startMarker,document.getElementById('conn-end').value=e.endMarker}else propertiesPanel.classList.add('hidden')}document.addEventListener('keydown',e=>{const t=document.activeElement?document.activeElement.tagName.toUpperCase():'',n=document.activeElement&&document.activeElement.isContentEditable||'INPUT'===t||'TEXTAREA'===t||'SELECT'===t;if((e.ctrlKey||e.metaKey)&&'s'===e.key.toLowerCase()&&!n)return e.preventDefault(),saveHistory(),void alert('Project temporarily saved to local storage!');if((e.ctrlKey||e.metaKey)&&'z'===e.key.toLowerCase()&&!n)return e.preventDefault(),e.shiftKey?historyIndex<historyStack.length-1&&loadBoardJSON(historyStack[++historyIndex]):historyIndex>0&&loadBoardJSON(historyStack[--historyIndex]),void 0;'Space'===e.code&&!n&&(spacePressed=!0,viewport.classList.add('panning'),e.preventDefault()),(e.ctrlKey||e.metaKey)&&'c'===e.key&&!n&&(selectedElements.size>0&&(clipboard=Array.from(selectedElements).map(e=>({html:e.outerHTML,left:parseFloat(e.style.left),top:parseFloat(e.style.top)})))),(e.ctrlKey||e.metaKey)&&'v'===e.key&&!n&&clipboard.length>0&&(clearSelection(),clearConnectorSelection(),clipboard.forEach(e=>{const t=document.createElement('div');t.innerHTML=e.html;const n=t.firstElementChild;n.classList.remove('selected'),n.removeAttribute('data-group-id'),n.id='el_'+Date.now()+Math.floor(1e3*Math.random()),n.style.left=e.left+30+'px',n.style.top=e.top+30+'px',board.appendChild(n),selectElement(n)}),updatePropertiesPanel(),saveHistory());if(('Delete'===e.key||'Backspace'===e.key)&&!n){e.preventDefault();let t=!1;selectedElements.size>0&&(selectedElements.forEach(e=>e.remove()),selectedElements.clear(),t=!0),selectedConnectors.size>0&&(selectedConnectors.forEach(e=>e.pathNode.remove()),selectedConnectors.clear(),t=!0),t&&(updatePropertiesPanel(),updateConnections(),saveHistory())}if(!n&&selectedElements.size>0){let t=0,n=0;const r=e.shiftKey?10:1;'ArrowUp'===e.key?n=-r:'ArrowDown'===e.key?n=r:'ArrowLeft'===e.key?t=-r:'ArrowRight'===e.key&&(t=r),(0!==t||0!==n)&&(e.preventDefault(),selectedElements.forEach(e=>{e.style.left=parseFloat(e.style.left)+t+'px',e.style.top=parseFloat(e.style.top)+n+'px'}),updateConnections())}}),document.addEventListener('keyup',e=>{'Space'===e.code&&(spacePressed=!1,viewport.classList.remove('panning'),isPanning=!1),['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)&&selectedElements.size>0&&saveHistory()}),document.querySelectorAll('.tool-item').forEach(e=>{e.addEventListener('dragstart',t=>{t.dataTransfer.setData('text/plain',e.getAttribute('data-type'))})}),viewport.addEventListener('dragover',e=>e.preventDefault()),viewport.addEventListener('drop',e=>{if(e.dataTransfer.files&&e.dataTransfer.files.length>0)return;e.preventDefault();const t=e.dataTransfer.getData('text/plain');if(t){const n=getBoardCoords(e.clientX,e.clientY);createComponent(t,n.x,n.y)}}),viewport.addEventListener('mousedown',e=>{if(1===e.button)return e.preventDefault(),document.activeElement.isContentEditable||window.focus(),isPanning=!0,startClientX=e.clientX,startClientY=e.clientY,void viewport.classList.add('panning');if(document.activeElement.isContentEditable||window.focus(),e.target.classList.contains('box')||e.target.classList.contains('circle')){const t=e.target.closest('.wf-component');t&&(t.classList.toggle('is-checked'),selectedElements.has(e.target.closest('.canvas-element'))&&(document.getElementById('prop-checked').checked=t.classList.contains('is-checked')),saveHistory())}if(hoveredTableEdge){e.stopPropagation(),isResizingTable=!0;const t=hoveredTableEdge.cell;if(tableResizeData={cell:t,type:hoveredTableEdge.type,startX:e.clientX,startY:e.clientY,startWidth:t.offsetWidth,startHeight:t.closest('tr').offsetHeight},'col'===tableResizeData.type){const e=t.closest('table');'fixed'!==e.style.tableLayout&&(e.querySelectorAll('th').forEach(e=>e.style.width=e.offsetWidth+'px'),e.style.tableLayout='fixed',e.style.width='max-content')}return}if(e.target.classList.contains('conn-node'))return e.stopPropagation(),clearSelection(),clearConnectorSelection(),isDrawingConnection=!0,document.body.classList.add('drawing-connection'),connectionStartEl=e.target.closest('.canvas-element'),connectionStartNode=['top','bottom','left','right'].find(t=>e.target.classList.contains(t)),tempConnectionPath=document.createElementNS('http://www.w3.org/2000/svg','path'),tempConnectionPath.classList.add('wf-temp-connector'),void svgLayer.appendChild(tempConnectionPath);if(e.target.classList.contains('wf-connector')){e.stopPropagation(),clearSelection(),clearConnectorSelection();const t=connections.find(t=>t.id===e.target.dataset.connId);return t&&selectConnector(t),void 0}if(e.target.classList.contains('add-col-btn')||e.target.classList.contains('add-row-btn')){e.stopPropagation();const t=e.target.closest('.canvas-element'),n=t.querySelector('tbody');if(e.target.classList.contains('add-col-btn')){let e=(t.dataset.columns||'').split(',').map(e=>e.trim());e.push('New Col'),t.dataset.columns=e.join(', '),renderTable(t),selectedElements.has(t)&&(document.getElementById('table-columns').value=t.dataset.columns)}else{const e=n.querySelectorAll('tr');let r=e[e.length-1];selectedCell&&t.contains(selectedCell)&&(r=selectedCell.closest('tr'));if(r){const e=r.cloneNode(!0);r.parentNode.insertBefore(e,r.nextSibling)}}return autoScaleWrapper(t),updatePropertiesPanel(),saveHistory(),void 0}if(e.target.classList.contains('resize-handle'))return e.stopPropagation(),isResizingElement=!0,resizeTarget=e.target.closest('.canvas-element'),resizeDir=Array.from(e.target.classList).find(t=>['nw','ne','sw','se','n','s','e','w'].includes(t)),startClientX=e.clientX,startClientY=e.clientY,startWidth=resizeTarget.offsetWidth,startHeight=resizeTarget.offsetHeight,startLeft=parseFloat(resizeTarget.style.left)||0,startTop=parseFloat(resizeTarget.style.top)||0,startRatio=startWidth/startHeight,void(sizeTooltip.style.display='block');const t=e.target.closest('.canvas-element');if(t&&!spacePressed&&!e.target.isContentEditable){e.stopPropagation(),e.shiftKey?toggleSelection(t):selectedElements.has(t)||(clearSelection(),clearConnectorSelection(),selectElement(t));if('table'===t.dataset.type){const n=e.target.closest('td, th');document.querySelectorAll('.selected-cell').forEach(e=>e.classList.remove('selected-cell')),n&&'TD'===n.tagName?(n.classList.add('selected-cell'),selectedCell=n):selectedCell=null}else document.querySelectorAll('.selected-cell').forEach(e=>e.classList.remove('selected-cell')),selectedCell=null;updatePropertiesPanel();const coords=getBoardCoords(e.clientX,e.clientY);if(draggedElementsData=Array.from(selectedElements).map(el=>({el:el,offsetX:coords.x-(parseFloat(el.style.left)||0),offsetY:coords.y-(parseFloat(el.style.top)||0)})),('browser'===t.dataset.type||'mobile'===t.dataset.type)&&1===selectedElements.size){const frameRect=t.getBoundingClientRect();document.querySelectorAll('.canvas-element').forEach(childEl=>{if(childEl===t||'browser'===childEl.dataset.type||'mobile'===childEl.dataset.type)return;const childRect=childEl.getBoundingClientRect();childRect.left>=frameRect.left&&childRect.right<=frameRect.right&&childRect.top>=frameRect.top&&childRect.bottom<=frameRect.bottom&&!draggedElementsData.find(d=>d.el===childEl)&&draggedElementsData.push({el:childEl,offsetX:coords.x-(parseFloat(childEl.style.left)||0),offsetY:coords.y-(parseFloat(childEl.style.top)||0)})})}return snapTargets=[],document.querySelectorAll('.canvas-element').forEach(e=>{selectedElements.has(e)||snapTargets.push({l:parseFloat(e.style.left),cx:parseFloat(e.style.left)+e.offsetWidth/2,r:parseFloat(e.style.left)+e.offsetWidth,t:parseFloat(e.style.top),cy:parseFloat(e.style.top)+e.offsetHeight/2,b:parseFloat(e.style.top)+e.offsetHeight})}),void(isDraggingElements=!0)}e.target.isContentEditable||e.target===helpBtn||helpModal.contains(e.target)||(clearSelection(),clearConnectorSelection(),updatePropertiesPanel(),spacePressed?(isPanning=!0,startClientX=e.clientX,startClientY=e.clientY):(isMarquee=!0,startBoardX=getBoardCoords(e.clientX,e.clientY).x,startBoardY=getBoardCoords(e.clientX,e.clientY).y,marquee.style.left=`${startBoardX}px`,marquee.style.top=`${startBoardY}px`,marquee.style.width='0px',marquee.style.height='0px',marquee.style.display='block'))}),window.addEventListener('mousemove',e=>{const t=document.getElementById('table-resizer-v'),n=document.getElementById('table-resizer-h');if(!isDraggingElements&&!isPanning&&!isMarquee&&!isResizingElement&&!isResizingTable&&!isDrawingConnection){let r=!1;if('TH'===e.target.tagName||'TD'===e.target.tagName){const o=e.target.getBoundingClientRect(),a=Math.abs(e.clientX-o.right)<=5,l=Math.abs(e.clientY-o.bottom)<=5,c=board.getBoundingClientRect();a?(document.body.style.cursor='col-resize',hoveredTableEdge={cell:e.target,type:'col'},r=!0,t.style.left=(o.right-c.left)/scale+'px',t.style.top=(o.top-c.top)/scale+'px',t.style.height=o.height/scale+'px',t.style.display='block',n.style.display='none'):l&&(document.body.style.cursor='row-resize',hoveredTableEdge={cell:e.target,type:'row'},r=!0,n.style.top=(o.bottom-c.top)/scale+'px',n.style.left=(o.left-c.left)/scale+'px',n.style.width=o.width/scale+'px',n.style.display='block',t.style.display='none')}r||(document.body.style.cursor='',hoveredTableEdge=null,t.style.display='none',n.style.display='none')}if(isResizingTable){const r=(e.clientX-tableResizeData.startX)/scale,o=(e.clientY-tableResizeData.startY)/scale;if('col'===tableResizeData.type){tableResizeData.cell.style.width=Math.max(20,tableResizeData.startWidth+r)+'px';const e=tableResizeData.cell.getBoundingClientRect(),n=board.getBoundingClientRect();t.style.left=(e.right-n.left)/scale+'px'}else{const e=tableResizeData.cell.closest('tr');e.style.height=Math.max(20,tableResizeData.startHeight+o)+'px';const t=tableResizeData.cell.getBoundingClientRect(),r=board.getBoundingClientRect();n.style.top=(t.bottom-r.top)/scale+'px'}return autoScaleWrapper(tableResizeData.cell.closest('.canvas-element')),void updateConnections()}if(isDrawingConnection){const t=getBoardCoords(e.clientX,e.clientY),n=getShapeEdges(connectionStartEl),r=n[connectionStartNode];document.querySelectorAll('.conn-node.snap-hover').forEach(e=>e.classList.remove('snap-hover'));const o=document.elementsFromPoint(e.clientX,e.clientY).find(e=>e.classList&&e.classList.contains('conn-node')&&e.closest('.canvas-element')!==connectionStartEl);let a={x:t.x,y:t.y};if(o){o.classList.add('snap-hover');const e=o.closest('.canvas-element'),t=['top','bottom','left','right'].find(e=>o.classList.contains(e)),n=getShapeEdges(e);a=n[t]}return void tempConnectionPath.setAttribute('d',`M ${r.x} ${r.y} L ${a.x} ${a.y}`)}let r=!1;if(!isDraggingElements&&!isPanning&&!isMarquee&&!isResizingElement&&!isResizingTable){const t=e.target.closest?e.target.closest('.canvas-element[data-type="table"]'):null;if(t&&t.classList.contains('selected')){r=!0;const n=t.querySelectorAll('tbody tr'),o=t.querySelector('.add-col-btn'),a=t.querySelector('.add-row-btn');let l='flex'===a.style.display,c='flex'===o.style.display;const s=e.target.closest('th, td');s?(l=s.closest('tr')===n[n.length-1],c=s===s.closest('tr').lastElementChild):e.target.classList.contains('add-col-btn')?c=!0:e.target.classList.contains('add-row-btn')&&(l=!0),o.style.display=c?'flex':'none',a.style.display=l?'flex':'none'}}r||document.querySelectorAll('.add-col-btn, .add-row-btn').forEach(e=>e.style.display='none');if(isResizingElement&&resizeTarget){const t=(e.clientX-startClientX)/scale,n=(e.clientY-startClientY)/scale;if('table'!==resizeTarget.dataset.type){let r=startWidth,o=startHeight,a=startLeft,l=startTop;resizeDir.includes('e')&&(r=startWidth+t),resizeDir.includes('s')&&(o=startHeight+n),resizeDir.includes('w')&&(r=startWidth-t),resizeDir.includes('n')&&(o=startHeight-n),e.shiftKey||isRatioLocked?Math.abs(t)>Math.abs(n)?(r=Math.max(20,r),o=r/startRatio):(o=Math.max(20,o),r=o*startRatio):(r=Math.max(20,r),o=Math.max(20,o)),resizeDir.includes('w')&&(a=startLeft+(startWidth-r)),resizeDir.includes('n')&&(l=startTop+(startHeight-o)),resizeTarget.style.width=`${r}px`,resizeTarget.style.height=`${o}px`,resizeTarget.style.left=`${a}px`,resizeTarget.style.top=`${l}px`,sizeTooltip.style.left=e.clientX+15+'px',sizeTooltip.style.top=e.clientY+15+'px',sizeTooltip.innerText=`W: ${Math.round(r)} | H: ${Math.round(o)}`,updateConnections()}}else if(isDraggingElements){const t=getBoardCoords(e.clientX,e.clientY);let n=draggedElementsData[0],r=t.x-n.offsetX,o=t.y-n.offsetY,a=n.el.offsetWidth,l=n.el.offsetHeight,c=null,s=null,i=null,d=null;const p=8/scale,u=[{val:r,offset:0},{val:r+a/2,offset:a/2},{val:r+a,offset:a}],m=[{val:o,offset:0},{val:o+l/2,offset:l/2},{val:o+l,offset:l}];for(let e=0;e<snapTargets.length;e++){const t=snapTargets[e];if(null===c)for(let e=0;e<u.length;e++){for(let n=0;n<3;n++){const r=[t.l,t.cx,t.r][n];if(Math.abs(u[e].val-r)<p){c=r-u[e].offset,s=r;break}}if(null!==c)break}if(null===i)for(let e=0;e<m.length;e++){for(let n=0;n<3;n++){const r=[t.t,t.cy,t.b][n];if(Math.abs(m[e].val-r)<p){i=r-m[e].offset,d=r;break}}if(null!==i)break}}let y=null!==c?c-r:0,x=null!==i?i-o:0;draggedElementsData.forEach(e=>{e.el.style.left=`${t.x-e.offsetX+y}px`,e.el.style.top=`${t.y-e.offsetY+x}px`});const h=document.getElementById('guide-v'),f=document.getElementById('guide-h');null!==c&&!e.shiftKey?(h.style.left=s+'px',h.style.display='block'):h.style.display='none',null!==i&&!e.shiftKey?(f.style.top=d+'px',f.style.display='block'):f.style.display='none',updateConnections()}else if(isPanning){panX+=e.clientX-startClientX,panY+=e.clientY-startClientY,startClientX=e.clientX,startClientY=e.clientY,updateBoardTransform()}else if(isMarquee){const t=getBoardCoords(e.clientX,e.clientY),n=Math.min(startBoardX,t.x),r=Math.min(startBoardY,t.y),o=Math.abs(t.x-startBoardX),a=Math.abs(t.y-startBoardY);marquee.style.left=`${n}px`,marquee.style.top=`${r}px`,marquee.style.width=`${o}px`,marquee.style.height=`${a}px`;const l={left:n,right:n+o,top:r,bottom:r+a};document.querySelectorAll('.canvas-element').forEach(t=>{const n={left:parseFloat(t.style.left),right:parseFloat(t.style.left)+t.offsetWidth,top:parseFloat(t.style.top),bottom:parseFloat(t.style.top)+t.offsetHeight};!(l.right<n.left||l.left>n.right||l.bottom<n.top||l.top>n.bottom)?selectElement(t):e.shiftKey||(t.classList.remove('selected'),selectedElements.delete(t))}),updatePropertiesPanel()}}),window.addEventListener('mouseup',e=>{if(1===e.button&&isPanning)return isPanning=!1,void viewport.classList.remove('panning');let t=!1;if(isDrawingConnection&&e&&e.clientX){document.body.classList.remove('drawing-connection');const n=document.elementsFromPoint(e.clientX,e.clientY),r=n.find(e=>e.classList&&e.classList.contains('conn-node')&&e.closest('.canvas-element')!==connectionStartEl);let o=null,a=null;if(r)o=r.closest('.canvas-element'),a=['top','bottom','left','right'].find(e=>r.classList.contains(e));else{o=n.find(e=>e.classList&&e.classList.contains('canvas-element')&&e!==connectionStartEl);if(o){const t=getBoardCoords(e.clientX,e.clientY),n=getShapeEdges(o);let r=1/0;['top','bottom','left','right'].forEach(e=>{const o=Math.hypot(n[e].x-t.x,n[e].y-t.y);o<r&&(r=o,a=e)})}}o&&a&&(createConnector(connectionStartEl,o,connectionStartNode,a),t=!0),tempConnectionPath&&tempConnectionPath.remove(),tempConnectionPath=null,isDrawingConnection=!1,connectionStartEl=null,connectionStartNode=null,document.querySelectorAll('.conn-node.snap-hover').forEach(e=>e.classList.remove('snap-hover'))}isResizingTable&&(isResizingTable=!1,tableResizeData=null,document.body.style.cursor='',document.getElementById('table-resizer-v').style.display='none',document.getElementById('table-resizer-h').style.display='none',t=!0),document.getElementById('guide-v').style.display='none',document.getElementById('guide-h').style.display='none',snapTargets=[];const n=isResizingElement,r=isDraggingElements;isDraggingElements=!1,isPanning=!1,isResizingElement=!1,isMarquee=!1,marquee.style.display='none',sizeTooltip.style.display='none';if(n||r){t=!0;try{updatePropertiesPanel()}catch(e){}}if(t)saveHistory()});function forceCloseEditor(){document.activeElement&&document.activeElement.isContentEditable&&document.activeElement.blur()}viewport.addEventListener('wheel',e=>{e.preventDefault(),forceCloseEditor();const t=Math.min(Math.max(.2,scale+-1e-3*e.deltaY),3),n=viewport.getBoundingClientRect();panX=e.clientX-n.left-(e.clientX-n.left-panX)*(t/scale),panY=e.clientY-n.top-(e.clientY-n.top-panY)*(t/scale),scale=t,updateBoardTransform()},{passive:!1}),viewport.addEventListener('dblclick',e=>{let t=e.target.closest('.editable');if(!t){const n=e.target.closest('.canvas-element');n&&'table'!==n.dataset.type&&'tabs'!==n.dataset.type&&(t=n.querySelector('.editable'))}if(t&&!t.isContentEditable){e.stopPropagation(),t.contentEditable='true',t.focus();const n=document.createRange();n.selectNodeContents(t);const r=window.getSelection();r.removeAllRanges(),r.addRange(n),t.onblur=()=>{t.contentEditable='false',t.innerText.trim()||(t.innerText=' ');const e=t.closest('.canvas-element');if('dropdown'===e.dataset.type){let n=(e.dataset.options||'').split(',').map(e=>e.trim());n[0]=t.innerText,e.dataset.options=n.join(', '),renderDropdownList(e),selectedElements.has(e)&&(document.getElementById('dropdown-options').value=e.dataset.options)}else if('table'===e.dataset.type&&'TH'===t.tagName){const t=Array.from(e.querySelectorAll('th'));e.dataset.columns=t.map(e=>e.innerText).join(', '),selectedElements.has(e)&&(document.getElementById('table-columns').value=e.dataset.columns)}else if('tabs'===e.dataset.type&&t.closest('.wf-tab-item')){const t=Array.from(e.querySelectorAll('.wf-tab-item span'));e.dataset.tabs=t.map(e=>e.innerText).join(', '),selectedElements.has(e)&&(document.getElementById('tab-options').value=e.dataset.tabs)}updatePropertiesPanel(),saveHistory()}}}),document.getElementById('prop-group').addEventListener('click',()=>{if(selectedElements.size>1){const e='group-'+Date.now();selectedElements.forEach(t=>t.dataset.groupId=e),saveHistory()}}),document.getElementById('prop-ungroup').addEventListener('click',()=>{selectedElements.forEach(e=>e.removeAttribute('data-group-id')),saveHistory()}),document.getElementById('prop-front').addEventListener('click',()=>{selectedElements.forEach(e=>board.appendChild(e)),saveHistory()}),document.getElementById('prop-forward').addEventListener('click',()=>{selectedElements.forEach(e=>{e.nextElementSibling&&e.parentNode.insertBefore(e.nextElementSibling,e)}),saveHistory()}),document.getElementById('prop-backward').addEventListener('click',()=>{selectedElements.forEach(e=>{e.previousElementSibling&&e.previousElementSibling!==svgLayer&&e.parentNode.insertBefore(e,e.previousElementSibling)}),saveHistory()}),document.getElementById('prop-back').addEventListener('click',()=>{selectedElements.forEach(e=>{board.children.length>1&&board.insertBefore(e,board.children[1])}),saveHistory()}),document.getElementById('conn-type').addEventListener('change',e=>{selectedConnectors.forEach(t=>{t.type=e.target.value}),updateConnections(),saveHistory()}),document.getElementById('conn-start').addEventListener('change',e=>{selectedConnectors.forEach(t=>{t.startMarker=e.target.value,t.pathNode.setAttribute('marker-start',e.target.value)}),saveHistory()}),document.getElementById('conn-end').addEventListener('change',e=>{selectedConnectors.forEach(t=>{t.endMarker=e.target.value,t.pathNode.setAttribute('marker-end',e.target.value)}),saveHistory()}),document.getElementById('prop-lock-ratio').addEventListener('click',e=>{isRatioLocked=!isRatioLocked,e.target.innerText=isRatioLocked?'🔒':'🔓',e.target.style.background=isRatioLocked?'#ccc':''}),document.getElementById('prop-w').addEventListener('input',e=>{const t=Math.max(20,e.target.value);selectedElements.forEach(e=>{if(isRatioLocked){const n=t/(e.offsetWidth/e.offsetHeight);e.style.height=n+'px',document.getElementById('prop-h').value=Math.round(n)}e.style.width=t+'px'}),updateConnections()}),document.getElementById('prop-w').addEventListener('change',()=>saveHistory()),document.getElementById('prop-h').addEventListener('input',e=>{const t=Math.max(20,e.target.value);selectedElements.forEach(e=>{if(isRatioLocked){const n=t*(e.offsetWidth/e.offsetHeight);e.style.width=n+'px',document.getElementById('prop-w').value=Math.round(n)}e.style.height=t+'px'}),updateConnections()}),document.getElementById('prop-h').addEventListener('change',()=>saveHistory()),document.getElementById('prop-fontsize').addEventListener('input',e=>{selectedElements.forEach(t=>{t.style.fontSize=e.target.value+'px';const n=t.querySelector('.wf-component');n&&(n.style.fontSize=e.target.value+'px')}),updateConnections()}),document.getElementById('prop-fontsize').addEventListener('change',()=>saveHistory());const toggleStyle=(e,t,n)=>{selectedElements.forEach(r=>{const o=r.querySelector('.wf-component');if(!o)return;const a=o.style[e]||getComputedStyle(o)[e];o.style[e]=a===t||'700'===a?n:t}),updatePropertiesPanel(),saveHistory()},toggleDecoration=e=>{selectedElements.forEach(t=>{const n=t.querySelector('.wf-component');if(!n)return;let r=n.style.textDecoration||'';r=r.includes(e)?r.replace(e,'').trim():(r+' '+e).trim(),n.style.textDecoration=r}),updatePropertiesPanel(),saveHistory()};document.getElementById('prop-bold').addEventListener('click',()=>toggleStyle('fontWeight','bold','normal')),document.getElementById('prop-italic').addEventListener('click',()=>toggleStyle('fontStyle','italic','normal')),document.getElementById('prop-underline').addEventListener('click',()=>toggleDecoration('underline')),document.getElementById('prop-strike').addEventListener('click',()=>toggleDecoration('line-through')),document.getElementById('state-select').addEventListener('change',e=>{selectedElements.forEach(t=>{t.classList.remove('state-disabled','state-focus','state-active','state-expanded','state-readonly'),'default'!==e.target.value&&t.classList.add(`state-${e.target.value}`)}),saveHistory()}),document.getElementById('prop-checked').addEventListener('change',e=>{selectedElements.forEach(t=>{if('checkbox'===t.dataset.type||'radio'===t.dataset.type){const n=t.querySelector('.wf-component');n&&(e.target.checked?n.classList.add('is-checked'):n.classList.remove('is-checked'))}}),saveHistory()});const dropdownInput=document.getElementById('dropdown-options');dropdownInput.addEventListener('input',e=>{if(1===selectedElements.size){const t=Array.from(selectedElements)[0];'dropdown'===t.dataset.type&&(t.dataset.options=e.target.value,renderDropdownList(t),updatePropertiesPanel())}}),dropdownInput.addEventListener('change',()=>saveHistory());const tableColsInput=document.getElementById('table-columns');tableColsInput.addEventListener('input',e=>{if(1===selectedElements.size){const t=Array.from(selectedElements)[0];'table'===t.dataset.type&&(t.dataset.columns=e.target.value,renderTable(t),autoScaleWrapper(t),updatePropertiesPanel())}}),tableColsInput.addEventListener('change',()=>saveHistory());const tabOptionsInput=document.getElementById('tab-options');tabOptionsInput.addEventListener('input',e=>{if(1===selectedElements.size){const t=Array.from(selectedElements)[0];'tabs'===t.dataset.type&&(t.dataset.tabs=e.target.value,renderTabs(t))}}),tabOptionsInput.addEventListener('change',()=>saveHistory());const tabActiveInput=document.getElementById('tab-active-index');tabActiveInput.addEventListener('input',e=>{if(1===selectedElements.size){const t=Array.from(selectedElements)[0];'tabs'===t.dataset.type&&(t.dataset.activeTab=e.target.value,renderTabs(t))}}),tabActiveInput.addEventListener('change',()=>saveHistory()),document.getElementById('cell-type').addEventListener('change',e=>{if(selectedCell){const t=e.target.value;selectedCell.dataset.cellType=t;let n='Data';const r=selectedCell.querySelector('.editable');r&&(n=r.innerText),'button'===t?selectedCell.innerHTML=`<div class="wf-btn" style="width:100%; box-sizing:border-box; padding:4px; font-weight:bold;"><span class="editable">${n}</span></div>`:'dropdown'===t?selectedCell.innerHTML=`<div class="wf-select" style="width:100%; box-sizing:border-box; padding:4px;"><span class="editable">${n}</span></div>`:'paragraph'===t?selectedCell.innerHTML=`<div class="wf-p editable" style="width:100%; box-sizing:border-box; font-size:12px; text-align:left;">${n}</div>`:selectedCell.innerHTML=`<span class="editable">${n}</span>`,saveHistory()}}),document.getElementById('save-btn').addEventListener('click',()=>{let e=prompt('Please enter a name for your JSON save file:','wireframe-project');if(null===e)return;e=e.trim()||'wireframe-project',e.endsWith('.json')||(e+='.json');const t=document.createElement('a');t.href=URL.createObjectURL(new Blob([getBoardJSON()],{type:'application/json'})),t.download=e,t.click()}),document.getElementById('load-btn').addEventListener('click',()=>document.getElementById('load-input').click()),document.getElementById('load-input').addEventListener('change',e=>{const t=e.target.files[0];if(!t)return;const n=new FileReader;n.onload=e=>{loadBoardJSON(e.target.result),historyStack=[],historyIndex=-1,saveHistory()},n.readAsText(t),e.target.value=''}),document.getElementById('clear-btn').addEventListener('click',()=>{confirm('Are you sure you want to clear the board? This cannot be undone.')&&(document.querySelectorAll('.canvas-element').forEach(e=>e.remove()),connections.forEach(e=>e.pathNode.remove()),connections=[],clearSelection(),clearConnectorSelection(),historyStack=[],historyIndex=-1,saveHistory())}),document.getElementById('export-btn').addEventListener('click',()=>{if(0===selectedElements.size)return alert('Please select one or more components to export!');let e=1/0,t=1/0,n=-1/0,r=-1/0;selectedElements.forEach(o=>{const a=parseFloat(o.style.left),l=parseFloat(o.style.top),c=o.offsetWidth,s=o.offsetHeight;a<e&&(e=a),l<t&&(t=l),a+c>n&&(n=a+c),l+s>r&&(r=l+s)}),e-=20,t-=20,n+=20,r+=20;const o=document.createElement('div');o.style.position='absolute',o.style.top='-9999px',o.style.left='-9999px',o.style.width=`${n-e}px`,o.style.height=`${r-t}px`,o.style.background='var(--canvas-bg)',document.body.appendChild(o),selectedElements.forEach(n=>{const r=n.cloneNode(!0);r.classList.remove('selected'),r.style.left=`${parseFloat(n.style.left)-e}px`,r.style.top=`${parseFloat(n.style.top)-t}px`,r.querySelectorAll('.selected-cell').forEach(e=>e.classList.remove('selected-cell')),o.appendChild(r)});const a=document.createElementNS('http://www.w3.org/2000/svg','svg');a.style.position='absolute',a.style.top='0',a.style.left='0',a.style.width='100%',a.style.height='100%',a.appendChild(svgLayer.querySelector('defs').cloneNode(!0)),connections.forEach(n=>{if(selectedElements.has(n.from)&&selectedElements.has(n.to)){const r=n.pathNode.cloneNode(!0);r.setAttribute('d',calculatePath(n.from,n.to,n.type,n.fromNode,n.toNode,-e,-t)),r.classList.remove('selected'),a.appendChild(r)}}),o.insertBefore(a,o.firstChild),html2canvas(o,{backgroundColor:'#e0e0e0'}).then(e=>{const t=document.createElement('a');t.download='wireframe-export.png',t.href=e.toDataURL('image/png'),t.click(),document.body.removeChild(o)})});
+        const viewport = document.getElementById('viewport');
+        const board = document.getElementById('board');
+        const svgLayer = document.getElementById('connections-layer');
+        const marquee = document.getElementById('marquee');
+        const propertiesPanel = document.getElementById('properties-panel');
+        const elPropsPanel = document.getElementById('element-props');
+        const connPropsPanel = document.getElementById('connector-props');
+        const sizeTooltip = document.getElementById('size-tooltip');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const toolbar = document.getElementById('toolbar');
+        const helpBtn = document.getElementById('help-btn');
+        const helpModal = document.getElementById('help-modal');
+        const closeModal = document.getElementById('close-modal');
+
+        helpBtn.addEventListener('click', () => helpModal.classList.add('visible'));
+        closeModal.addEventListener('click', () => helpModal.classList.remove('visible'));
+        helpModal.addEventListener('click', (e) => { if (e.target === helpModal) helpModal.classList.remove('visible'); });
+
+        let scale = 1, panX = -4000, panY = -4000;
+        let isPanning = false, isMarquee = false, spacePressed = false;
+        let startClientX = 0, startClientY = 0, startBoardX = 0, startBoardY = 0;
+        let isResizingElement = false, resizeTarget = null, resizeDir = '';
+        let startWidth = 0, startHeight = 0, startLeft = 0, startTop = 0, startRatio = 1;
+        let isRatioLocked = false;
+        let hoveredTableEdge = null, isResizingTable = false, tableResizeData = null;
+
+        let selectedElements = new Set(); let selectedConnectors = new Set(); let selectedCell = null; 
+        let draggedElementsData = []; let isDraggingElements = false; let clipboard = [];
+        let snapTargets = []; 
+        let isDrawingConnection = false; let connectionStartEl = null; let connectionStartNode = null; let tempConnectionPath = null; let connections = []; 
+        
+        let reconnectTargetConn = null; let reconnectEditEnd = null; let isDraggingWaypoint = false; let waypointDragIndex = -1;
+        
+        let historyStack = []; let historyIndex = -1;
+
+        // --- GLOBAL PASTE LISTENER (IMAGES & SVG) ---
+        window.addEventListener('paste', (e) => {
+            if (document.activeElement && document.activeElement.isContentEditable) return;
+            const items = e.clipboardData.items; let handled = false;
+            const rect = viewport.getBoundingClientRect(); const coords = getBoardCoords(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => { createComponent('image', coords.x - 50, coords.y - 50, event.target.result); };
+                    reader.readAsDataURL(items[i].getAsFile()); handled = true; break;
+                }
+            }
+            if (!handled) {
+                const textData = e.clipboardData.getData('text');
+                if (textData && textData.trim().toLowerCase().startsWith('<svg')) {
+                    createComponent('image', coords.x - 50, coords.y - 50, 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(textData.trim()))));
+                }
+            }
+        });
+
+        // --- FILE DROP LISTENER ---
+        document.body.addEventListener('dragover', e => e.preventDefault());
+        document.body.addEventListener('drop', e => {
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                e.preventDefault(); e.stopPropagation(); const file = e.dataTransfer.files[0];
+                if (file.name.endsWith('.json') || file.type === 'application/json') {
+                    const reader = new FileReader();
+                    reader.onload = (event) => { loadBoardJSON(event.target.result); historyStack = []; historyIndex = -1; saveHistory(); };
+                    reader.readAsText(file);
+                }
+            }
+        });
+
+        sidebarToggle.addEventListener('click', function() { toolbar.classList.toggle('collapsed'); this.classList.toggle('collapsed'); this.innerText = toolbar.classList.contains('collapsed') ? '▶' : '◀'; });
+
+        function getBoardJSON() {
+            const payload = { elements: [], connections: [] };
+            document.querySelectorAll('.canvas-element').forEach(el => {
+                if (!el.id) el.id = 'el_' + Date.now() + Math.floor(Math.random()*1000);
+                const comp = el.querySelector('.wf-component');
+                const stateMatch = Array.from(el.classList).find(c => c.startsWith('state-')); 
+                payload.elements.push({
+                    id: el.id, type: el.dataset.type, x: parseFloat(el.style.left) || 0, y: parseFloat(el.style.top) || 0,
+                    w: el.style.width, h: el.style.height, state: stateMatch ? stateMatch.replace('state-', '') : 'default',
+                    options: el.dataset.options || '', columns: el.dataset.columns || '', groupId: el.dataset.groupId || '',
+                    tabs: el.dataset.tabs || '', activeTab: el.dataset.activeTab || '0', fontSize: el.style.fontSize || '',
+                    htmlData: btoa(encodeURIComponent(comp.outerHTML)) 
+                });
+            });
+            connections.forEach(c => { 
+                payload.connections.push({ 
+                    id: c.id, from: c.from.id, to: c.to.id, fromNode: c.fromNode, toNode: c.toNode, 
+                    type: c.type, startMarker: c.startMarker, endMarker: c.endMarker,
+                    strokeWidth: c.strokeWidth, strokeStyle: c.strokeStyle, text: c.text, waypoints: c.waypoints
+                }); 
+            });
+            return JSON.stringify(payload);
+        }
+
+        function loadBoardJSON(jsonString) {
+            if(!jsonString) return;
+            try {
+                const data = JSON.parse(jsonString);
+                document.querySelectorAll('.canvas-element').forEach(el => el.remove()); 
+                connections.forEach(c => { if(c.labelNode) c.labelNode.remove(); });
+                connections = []; svgLayer.innerHTML = svgLayer.querySelector('defs').outerHTML; clearSelection(); clearConnectorSelection();
+                
+                data.elements.forEach(elData => {
+                    const wrapper = document.createElement('div'); wrapper.className = 'canvas-element'; wrapper.id = elData.id; wrapper.dataset.type = elData.type;
+                    wrapper.style.left = elData.x + 'px'; wrapper.style.top = elData.y + 'px';
+                    if (elData.w) wrapper.style.width = elData.w; if (elData.h) wrapper.style.height = elData.h; if (elData.fontSize) wrapper.style.fontSize = elData.fontSize;
+                    if (elData.state && elData.state !== 'default') wrapper.classList.add('state-' + elData.state);
+                    if (elData.options) wrapper.dataset.options = elData.options; if (elData.columns) wrapper.dataset.columns = elData.columns;
+                    if (elData.groupId) wrapper.dataset.groupId = elData.groupId; if (elData.tabs) wrapper.dataset.tabs = elData.tabs; if (elData.activeTab) wrapper.dataset.activeTab = elData.activeTab;
+                    try { wrapper.innerHTML = decodeURIComponent(atob(elData.htmlData)); } catch(e) { wrapper.innerHTML = elData.htmlData; }
+                    
+                    if (wrapper.dataset.type === 'dropdown' && !wrapper.querySelector('.wf-dropdown-list')) {
+                        wrapper.insertAdjacentHTML('beforeend', '<div class="wf-dropdown-list"></div>');
+                    }
+                    if (wrapper.dataset.type !== 'table') wrapper.insertAdjacentHTML('beforeend', `<div class="resize-handle nw"></div><div class="resize-handle ne"></div><div class="resize-handle sw"></div><div class="resize-handle se"></div><div class="resize-handle n"></div><div class="resize-handle s"></div><div class="resize-handle e"></div><div class="resize-handle w"></div>`);
+                    wrapper.insertAdjacentHTML('beforeend', `<div class="conn-node top"></div><div class="conn-node bottom"></div><div class="conn-node left"></div><div class="conn-node right"></div>`);
+                    board.appendChild(wrapper); 
+                    if (wrapper.dataset.type === 'dropdown') renderDropdownList(wrapper); if (wrapper.dataset.type === 'tabs') renderTabs(wrapper);
+                });
+                
+                data.connections.forEach(cData => {
+                    const fromEl = document.getElementById(cData.from); const toEl = document.getElementById(cData.to);
+                    if (fromEl && toEl) {
+                        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'); path.classList.add('wf-connector');
+                        path.setAttribute('marker-start', cData.startMarker); path.setAttribute('marker-end', cData.endMarker); svgLayer.appendChild(path);
+                        const labelNode = document.createElement('div'); labelNode.className = 'conn-label editable'; labelNode.style.display = 'none'; board.appendChild(labelNode);
+                        const connObj = { 
+                            id: cData.id, from: fromEl, to: toEl, fromNode: cData.fromNode, toNode: cData.toNode, 
+                            pathNode: path, labelNode: labelNode, type: cData.type, startMarker: cData.startMarker, endMarker: cData.endMarker,
+                            strokeWidth: cData.strokeWidth || 3, strokeStyle: cData.strokeStyle || 'solid', text: cData.text || '', 
+                            waypoints: cData.waypoints || (cData.waypoint ? [cData.waypoint] : [])
+                        };
+                        path.dataset.connId = connObj.id; connections.push(connObj);
+                    }
+                });
+                updateConnections(); updatePropertiesPanel();
+            } catch(err) { console.error("History Load Error:", err); }
+        }
+
+        function saveHistory() {
+            const currentState = getBoardJSON();
+            if (historyIndex >= 0 && historyStack[historyIndex] === currentState) return; 
+            historyStack = historyStack.slice(0, historyIndex + 1); historyStack.push(currentState);
+            if(historyStack.length > 50) historyStack.shift(); else historyIndex++;
+            try { localStorage.setItem('wireframe_autosave', currentState); } catch(e) {}
+        }
+
+        window.addEventListener('load', () => { const saved = localStorage.getItem('wireframe_autosave'); if (saved) { try { loadBoardJSON(saved); historyStack = [saved]; historyIndex = 0; } catch(e) { saveHistory(); } } else saveHistory(); });
+        function updateBoardTransform() { board.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`; } updateBoardTransform();
+        function getBoardCoords(clientX, clientY) { const rect = board.getBoundingClientRect(); return { x: (clientX - rect.left) / scale, y: (clientY - rect.top) / scale }; }
+        function getShapeEdges(el) { const l = parseFloat(el.style.left); const t = parseFloat(el.style.top); const w = el.offsetWidth; const h = el.offsetHeight; return { top: { x: l+w/2, y: t }, bottom: { x: l+w/2, y: t+h }, left: { x: l, y: t+h/2 }, right: { x: l+w, y: t+h/2 }, center: { x: l+w/2, y: t+h/2 } }; }
+        
+        function calculatePath(fromEl, toEl, type, fromNodeStr, toNodeStr, shiftX = 0, shiftY = 0, waypoints = []) {
+            const e1 = getShapeEdges(fromEl); const e2 = getShapeEdges(toEl);
+            let p1 = { x: e1[fromNodeStr].x + shiftX, y: e1[fromNodeStr].y + shiftY };
+            let p2 = { x: e2[toNodeStr].x + shiftX, y: e2[toNodeStr].y + shiftY };
+
+            const getOp = (p, nStr, amount) => { if(nStr==='top') return {x:p.x,y:p.y-amount}; if(nStr==='bottom') return {x:p.x,y:p.y+amount}; if(nStr==='left') return {x:p.x-amount,y:p.y}; return {x:p.x+amount,y:p.y}; };
+            const op1 = getOp(p1, fromNodeStr, 15);
+            const op2 = getOp(p2, toNodeStr, 15);
+
+            let d = `M ${p1.x} ${p1.y} L ${op1.x} ${op1.y} `;
+            let wps = waypoints.map(w => ({x: w.x + shiftX, y: w.y + shiftY}));
+
+            if (type === 'straight') {
+                for(let wp of wps) d += `L ${wp.x} ${wp.y} `;
+                d += `L ${op2.x} ${op2.y} L ${p2.x} ${p2.y}`;
+                return d;
+            }
+            if (type === 'curve') {
+                if (wps.length === 0) {
+                    const dist = Math.max(Math.abs(p2.x - p1.x), Math.abs(p2.y - p1.y)) * 0.5;
+                    const cp1 = getOp(p1, fromNodeStr, dist); const cp2 = getOp(p2, toNodeStr, dist);
+                    return `M ${p1.x} ${p1.y} C ${cp1.x} ${cp1.y}, ${cp2.x} ${cp2.y}, ${p2.x} ${p2.y}`;
+                }
+                for (let i = 0; i < wps.length; i++) {
+                    let wp = wps[i];
+                    let next = (i === wps.length - 1) ? op2 : wps[i+1];
+                    let midX = (wp.x + next.x)/2; let midY = (wp.y + next.y)/2;
+                    if (i === wps.length - 1) { d += `Q ${wp.x} ${wp.y} ${op2.x} ${op2.y} `; } 
+                    else { d += `Q ${wp.x} ${wp.y} ${midX} ${midY} `; }
+                }
+                d += `L ${p2.x} ${p2.y}`;
+                return d;
+            }
+
+            // elbow
+            if (wps.length === 0) {
+                 const midX = op1.x + (op2.x - op1.x)/2; const midY = op1.y + (op2.y - op1.y)/2;
+                 const isV = s => s==='top'||s==='bottom';
+                 if (isV(fromNodeStr) && isV(toNodeStr)) d += `L ${op1.x} ${midY} L ${op2.x} ${midY} `;
+                 else if (!isV(fromNodeStr) && !isV(toNodeStr)) d += `L ${midX} ${op1.y} L ${midX} ${op2.y} `;
+                 else { if (isV(fromNodeStr)) d += `L ${op1.x} ${op2.y} `; else d += `L ${op2.x} ${op1.y} `; }
+            } else {
+                 let curr = op1;
+                 for (let wp of wps) {
+                     let dx = Math.abs(wp.x - curr.x); let dy = Math.abs(wp.y - curr.y);
+                     if (dx > dy) d += `L ${wp.x} ${curr.y} L ${wp.x} ${wp.y} `; else d += `L ${curr.x} ${wp.y} L ${wp.x} ${wp.y} `;
+                     curr = wp;
+                 }
+                 let dx = Math.abs(op2.x - curr.x); let dy = Math.abs(op2.y - curr.y);
+                 if (dx > dy) d += `L ${op2.x} ${curr.y} L ${op2.x} ${op2.y} `; else d += `L ${curr.x} ${op2.y} L ${op2.x} ${op2.y} `;
+            }
+            d += `L ${p2.x} ${p2.y}`;
+            return d;
+        }
+
+        function updateConnections() { 
+            const handlesLayer = document.getElementById('connector-handles');
+            if(handlesLayer) handlesLayer.innerHTML = '';
+
+            connections.forEach(conn => { 
+                if (!board.contains(conn.from) || !board.contains(conn.to)) { 
+                    conn.pathNode.remove(); if(conn.labelNode) conn.labelNode.remove(); return; 
+                } 
+                if (!conn.waypoints) conn.waypoints = [];
+                conn.pathNode.setAttribute('d', calculatePath(conn.from, conn.to, conn.type, conn.fromNode, conn.toNode, 0, 0, conn.waypoints)); 
+                conn.pathNode.style.strokeWidth = (conn.strokeWidth || 3) + 'px';
+                if(conn.strokeStyle === 'dashed') conn.pathNode.style.strokeDasharray = '8,8';
+                else if(conn.strokeStyle === 'dotted') conn.pathNode.style.strokeDasharray = '3,4';
+                else conn.pathNode.style.strokeDasharray = 'none';
+
+                if (conn.text) {
+                    if (conn.labelNode.innerText !== conn.text && !conn.labelNode.isContentEditable) conn.labelNode.innerText = conn.text;
+                    conn.labelNode.style.display = 'block';
+                    try {
+                        const totalLen = conn.pathNode.getTotalLength();
+                        const pt = conn.pathNode.getPointAtLength(totalLen / 2);
+                        conn.labelNode.style.left = pt.x + 'px';
+                        conn.labelNode.style.top = pt.y + 'px';
+                    } catch(e) {}
+                } else {
+                    conn.labelNode.style.display = 'none';
+                }
+            }); 
+            connections = connections.filter(conn => board.contains(conn.from) && board.contains(conn.to)); 
+
+            // Update Connection Editor Handles
+            if(handlesLayer && selectedConnectors.size === 1) {
+                const conn = Array.from(selectedConnectors)[0];
+                try {
+                    const pt1 = conn.pathNode.getPointAtLength(0); 
+                    const pt2 = conn.pathNode.getPointAtLength(conn.pathNode.getTotalLength());
+                    
+                    let createHandle = (x, y, className, id, index, title) => {
+                        let h = document.createElement('div');
+                        h.className = 'conn-handle ' + className;
+                        if(id) h.id = id;
+                        if(index !== undefined) h.dataset.index = index;
+                        h.style.display = 'block'; h.style.left = x + 'px'; h.style.top = y + 'px'; h.title = title;
+                        handlesLayer.appendChild(h);
+                    };
+
+                    createHandle(pt1.x, pt1.y, 'end-handle', 'conn-edit-start', undefined, 'Drag to reattach Start');
+                    createHandle(pt2.x, pt2.y, 'end-handle', 'conn-edit-end', undefined, 'Drag to reattach End');
+
+                    conn.waypoints.forEach((wp, i) => {
+                        createHandle(wp.x, wp.y, 'wp-handle', '', i, 'Drag to move node. Double-click to remove.');
+                    });
+
+                    // Draw ghost handles at structural midpoints using path length sampling
+                    const totalLen = conn.pathNode.getTotalLength();
+                    for (let i = 0; i <= conn.waypoints.length; i++) {
+                        let frac = (i + 0.5) / (conn.waypoints.length + 1);
+                        let pt = conn.pathNode.getPointAtLength(totalLen * frac);
+                        createHandle(pt.x, pt.y, 'ghost-handle', '', i, 'Drag to add new routing node');
+                    }
+                } catch(e) { }
+            }
+        }
+        
+        function createConnector(fromEl, toEl, fromNodeStr, toNodeStr) { 
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'); path.classList.add('wf-connector'); path.setAttribute('marker-end', 'url(#arrow-end)'); svgLayer.appendChild(path); 
+            const labelNode = document.createElement('div'); labelNode.className = 'conn-label editable'; labelNode.style.display = 'none'; board.appendChild(labelNode);
+            const connObj = { id: 'conn_' + Date.now() + Math.floor(Math.random()*1000), from: fromEl, to: toEl, fromNode: fromNodeStr, toNode: toNodeStr, pathNode: path, labelNode: labelNode, type: 'elbow', startMarker: 'none', endMarker: 'url(#arrow-end)', strokeWidth: 3, strokeStyle: 'solid', text: '', waypoints: [] }; 
+            path.dataset.connId = connObj.id; connections.push(connObj); updateConnections(); 
+        }
+
+        function renderTable(wrapper) { let cols = (wrapper.dataset.columns || 'Header 1, Header 2').split(','); if (cols.length === 0 || (cols.length === 1 && cols[0].trim() === '')) cols = ['Header']; const tbody = wrapper.querySelector('tbody'); if (!tbody) return; const rows = Array.from(tbody.querySelectorAll('tr')); const currentThs = Array.from(rows[0].querySelectorAll('th')); rows[0].innerHTML = cols.map((col, i) => { let wStyle = currentThs[i] && currentThs[i].style.width ? `width:${currentThs[i].style.width};` : ''; return `<th class="editable" style="${wStyle}">${col.trim() || '\u00A0'}</th>` }).join(''); for (let i = 1; i < rows.length; i++) { const currentCells = Array.from(rows[i].querySelectorAll('td')); rows[i].innerHTML = cols.map((col, index) => { const existingHTML = currentCells[index] ? currentCells[index].innerHTML : '<span class="editable">Data</span>'; const cellType = currentCells[index] ? (currentCells[index].dataset.cellType || 'text') : 'text'; return `<td data-cell-type="${cellType}">${existingHTML}</td>`; }).join(''); } }
+        function renderDropdownList(wrapper) { const options = (wrapper.dataset.options || '').split(',').map(s => s.trim()).filter(s => s); const listContainer = wrapper.querySelector('.wf-dropdown-list'); if (listContainer) { listContainer.innerHTML = options.slice(1).map(opt => `<div class="wf-dropdown-item">${opt}</div>`).join(''); const editableSpan = wrapper.querySelector('.editable'); if(editableSpan) editableSpan.innerText = options[0] || 'Select Option'; } }
+        function renderTabs(wrapper) { let tabs = (wrapper.dataset.tabs || 'Tab 1, Tab 2').split(','); if (tabs.length === 0 || (tabs.length === 1 && tabs[0].trim() === '')) tabs = ['Tab']; let activeIdx = parseInt(wrapper.dataset.activeTab || '0'); if (activeIdx >= tabs.length) activeIdx = 0; const header = wrapper.querySelector('.wf-tab-header'); if (header) { header.innerHTML = tabs.map((tab, i) => ` <div class="wf-tab-item ${i === activeIdx ? 'active' : ''}"> <span class="editable">${tab.trim() || '\u00A0'}</span> </div> `).join(''); } }
+        function autoScaleWrapper(wrapper) { if (wrapper.dataset.type === 'table') { wrapper.style.width = 'max-content'; wrapper.style.height = 'max-content'; updateConnections(); } }
+
+        function createComponent(type, x, y, extraData = null) {
+            const wrapper = document.createElement('div'); wrapper.className = 'canvas-element';
+            wrapper.id = 'el_' + Date.now() + Math.floor(Math.random()*1000); 
+            wrapper.style.left = `${x}px`; wrapper.style.top = `${y}px`; wrapper.dataset.type = type;
+            let innerHTML = '';
+            
+            switch(type) {
+                case 'browser': wrapper.style.width = '600px'; wrapper.style.height = '400px'; wrapper.style.zIndex = '0'; innerHTML = `<div class="wf-component wf-browser"><div class="browser-header"><div class="browser-dots"><span></span><span></span><span></span></div><div class="browser-url editable">https://www.website.com</div></div><div class="browser-content"></div></div>`; break;
+                case 'mobile': wrapper.style.width = '320px'; wrapper.style.height = '600px'; wrapper.style.zIndex = '0'; innerHTML = `<div class="wf-component wf-mobile"><div class="mobile-notch"></div><div class="mobile-content"></div></div>`; break;
+                case 'tabs': wrapper.style.width = '300px'; wrapper.style.height = '150px'; wrapper.style.zIndex = '1'; wrapper.dataset.tabs = "Tab 1, Tab 2, Tab 3"; wrapper.dataset.activeTab = "0"; innerHTML = `<div class="wf-component wf-tabs" style="font-weight:bold; height:100%;"><div class="wf-tab-header"></div><div class="wf-tab-content" style="flex:1;"></div></div>`; break;
+                case 'text-label': wrapper.style.width = '100px'; wrapper.style.height = '30px'; innerHTML = `<div class="wf-component wf-label"><span class="editable">Label Text</span></div>`; break;
+                case 'button': wrapper.style.width = '140px'; wrapper.style.height = '40px'; innerHTML = `<div class="wf-component wf-btn" style="font-weight:bold;"><span class="editable">Action Button</span></div>`; break;
+                case 'text-field': wrapper.style.width = '160px'; wrapper.style.height = '40px'; innerHTML = `<div class="wf-component wf-input"><span class="editable">Text Input...</span></div>`; break;
+                case 'dropdown': wrapper.style.width = '160px'; wrapper.style.height = '40px'; wrapper.dataset.options = "Select Option,Option 2,Option 3"; innerHTML = `<div class="wf-component wf-select"><span class="editable">Select Option</span></div><div class="wf-dropdown-list"></div>`; break;
+                case 'checkbox': wrapper.style.width = '140px'; wrapper.style.height = '30px'; innerHTML = `<div class="wf-component wf-checkbox"><div class="box"></div><span class="editable">Checkbox Label</span></div>`; break;
+                case 'radio': wrapper.style.width = '140px'; wrapper.style.height = '30px'; innerHTML = `<div class="wf-component wf-radio"><div class="circle"></div><span class="editable">Radio Label</span></div>`; break;
+                case 'paragraph': wrapper.style.width = '200px'; wrapper.style.height = '60px'; innerHTML = `<div class="wf-component wf-p editable">Wireframe text paragraph. Double click to edit me.</div>`; break;
+                case 'tooltip': wrapper.style.width = '120px'; wrapper.style.height = '30px'; innerHTML = `<div class="wf-component wf-tooltip"><span class="editable">Tooltip info...</span></div>`; break;
+                case 'sticky': wrapper.style.width = '120px'; wrapper.style.height = '120px'; innerHTML = `<div class="wf-component wf-sticky"><span class="editable">Note</span></div>`; break;
+                case 'annotator': wrapper.style.width = '40px'; wrapper.style.height = '40px'; innerHTML = `<div class="wf-component wf-annotator" style="font-weight:bold; border-radius: 50%;"><span class="editable">1</span></div>`; break;
+                case 'table': wrapper.dataset.columns = "Header 1, Header 2"; innerHTML = `<div class="wf-component table-container"><table class="wf-table"><tbody><tr><th class="editable">Header 1</th><th class="editable">Header 2</th></tr><tr><td data-cell-type="text"><span class="editable">Data A</span></td><td data-cell-type="text"><span class="editable">Data B</span></td></tr></tbody></table><button class="table-controls add-col-btn">+</button><button class="table-controls add-row-btn">+</button></div>`; break;
+                case 'rectangle': wrapper.style.width = '150px'; wrapper.style.height = '100px'; innerHTML = `<div class="wf-component wf-rect"><span class="editable"></span></div>`; break;
+                case 'circle': wrapper.style.width = '100px'; wrapper.style.height = '100px'; innerHTML = `<div class="wf-component wf-circ"><span class="editable"></span></div>`; break;
+                case 'diamond': wrapper.style.width = '120px'; wrapper.style.height = '120px'; innerHTML = `<div class="wf-component wf-diam"><svg class="bg-svg" preserveAspectRatio="none" viewBox="0 0 100 100" style="position:absolute; width:100%; height:100%; top:0; left:0;"><polygon points="50,2 98,50 50,98 2,50" fill="var(--element-bg)" stroke="var(--border-color)" stroke-width="4"/></svg><div class="wf-diam-container"><span class="editable"></span></div></div>`; break;
+                case 'line': wrapper.style.width = '150px'; wrapper.style.height = '10px'; innerHTML = `<div class="wf-component" style="display:flex;align-items:center;"><div class="wf-line-inner"></div></div>`; break;
+                case 'image': wrapper.style.width = '200px'; wrapper.style.height = '200px'; innerHTML = `<img class="wf-component wf-image" src="${extraData}" style="width:100%; height:100%; object-fit:contain;" draggable="false" />`; break;
+            }
+            
+            wrapper.innerHTML = innerHTML;
+            if (type !== 'table') wrapper.insertAdjacentHTML('beforeend', `<div class="resize-handle nw"></div><div class="resize-handle ne"></div><div class="resize-handle sw"></div><div class="resize-handle se"></div><div class="resize-handle n"></div><div class="resize-handle s"></div><div class="resize-handle e"></div><div class="resize-handle w"></div>`);
+            wrapper.insertAdjacentHTML('beforeend', `<div class="conn-node top"></div><div class="conn-node bottom"></div><div class="conn-node left"></div><div class="conn-node right"></div>`);
+            board.appendChild(wrapper);
+            if(type === 'dropdown') renderDropdownList(wrapper); 
+            if(type === 'table') renderTable(wrapper);
+            if(type === 'tabs') renderTabs(wrapper);
+
+            clearSelection(); clearConnectorSelection(); selectElement(wrapper); updatePropertiesPanel();
+            saveHistory();
+            return wrapper;
+        }
+
+        function selectElement(el) { const groupId = el.dataset.groupId; if (groupId) { document.querySelectorAll(`.canvas-element[data-group-id="${groupId}"]`).forEach(gEl => { selectedElements.add(gEl); gEl.classList.add('selected'); }); } else { selectedElements.add(el); el.classList.add('selected'); } }
+        function toggleSelection(el) { const groupId = el.dataset.groupId; if (selectedElements.has(el)) { if (groupId) { document.querySelectorAll(`.canvas-element[data-group-id="${groupId}"]`).forEach(gEl => { selectedElements.delete(gEl); gEl.classList.remove('selected'); }); } else { selectedElements.delete(el); el.classList.remove('selected'); } } else { selectElement(el); } }
+        function clearSelection() { selectedElements.forEach(el => el.classList.remove('selected')); selectedElements.clear(); document.querySelectorAll('.selected-cell').forEach(c => c.classList.remove('selected-cell')); selectedCell = null; }
+        function selectConnector(connObj) { selectedConnectors.add(connObj); connObj.pathNode.classList.add('selected'); updatePropertiesPanel(); updateConnections(); }
+        function clearConnectorSelection() { selectedConnectors.forEach(c => c.pathNode.classList.remove('selected')); selectedConnectors.clear(); updateConnections(); }
+
+        function updatePropertiesPanel() {
+            if (selectedElements.size > 0) {
+                propertiesPanel.classList.remove('hidden'); elPropsPanel.style.display = 'block'; connPropsPanel.style.display = 'none';
+                const el = Array.from(selectedElements)[0];
+                document.getElementById('prop-w').value = Math.round(el.offsetWidth); document.getElementById('prop-h').value = Math.round(el.offsetHeight);
+                let currentFontSize = window.getComputedStyle(el).fontSize; document.getElementById('prop-fontsize').value = parseInt(currentFontSize) || 14;
+                const comp = el.querySelector('.wf-component');
+                if (comp) {
+                    const compStyle = getComputedStyle(comp);
+                    document.getElementById('prop-bold').classList.toggle('active', comp.style.fontWeight === 'bold' || compStyle.fontWeight === '700' || compStyle.fontWeight === 'bold');
+                    document.getElementById('prop-italic').classList.toggle('active', comp.style.fontStyle === 'italic' || compStyle.fontStyle === 'italic');
+                    document.getElementById('prop-underline').classList.toggle('active', (comp.style.textDecoration || '').includes('underline'));
+                    document.getElementById('prop-strike').classList.toggle('active', (comp.style.textDecoration || '').includes('line-through'));
+                    
+                    const align = comp.style.textAlign || compStyle.textAlign;
+                    document.getElementById('prop-align-left').classList.toggle('active', align === 'left');
+                    document.getElementById('prop-align-center').classList.toggle('active', align === 'center');
+                    document.getElementById('prop-align-right').classList.toggle('active', align === 'right');
+                }
+                let state = 'default'; ['disabled','focus','active','expanded','readonly'].forEach(s => { if(el.classList.contains('state-'+s)) state=s; }); document.getElementById('state-select').value = state;
+                if (el.dataset.type === 'checkbox' || el.dataset.type === 'radio') { document.getElementById('prop-checked-wrapper').style.display = 'flex'; document.getElementById('prop-checked').checked = comp && comp.classList.contains('is-checked'); } else { document.getElementById('prop-checked-wrapper').style.display = 'none'; }
+                if (el.dataset.type === 'dropdown') { document.getElementById('dropdown-settings').style.display = 'flex'; document.getElementById('dropdown-options').value = el.dataset.options || ''; document.getElementById('table-settings').style.display = 'none'; document.getElementById('cell-settings').style.display = 'none'; document.getElementById('tab-settings').style.display = 'none';
+                } else if (el.dataset.type === 'table') { document.getElementById('table-settings').style.display = 'flex'; document.getElementById('table-columns').value = el.dataset.columns || ''; document.getElementById('dropdown-settings').style.display = 'none'; document.getElementById('tab-settings').style.display = 'none'; if (selectedCell) { document.getElementById('cell-settings').style.display = 'flex'; document.getElementById('cell-type').value = selectedCell.dataset.cellType || 'text'; } else { document.getElementById('cell-settings').style.display = 'none'; }
+                } else if (el.dataset.type === 'tabs') { document.getElementById('tab-settings').style.display = 'flex'; document.getElementById('tab-options').value = el.dataset.tabs || ''; document.getElementById('tab-active-index').value = el.dataset.activeTab || '0'; document.getElementById('dropdown-settings').style.display = 'none'; document.getElementById('table-settings').style.display = 'none'; document.getElementById('cell-settings').style.display = 'none';
+                } else { document.getElementById('dropdown-settings').style.display = 'none'; document.getElementById('table-settings').style.display = 'none'; document.getElementById('cell-settings').style.display = 'none'; document.getElementById('tab-settings').style.display = 'none';}
+            } else if (selectedConnectors.size > 0) {
+                propertiesPanel.classList.remove('hidden'); elPropsPanel.style.display = 'none'; connPropsPanel.style.display = 'flex';
+                const conn = Array.from(selectedConnectors)[0]; 
+                document.getElementById('conn-type').value = conn.type; document.getElementById('conn-start').value = conn.startMarker; document.getElementById('conn-end').value = conn.endMarker;
+                document.getElementById('conn-weight').value = conn.strokeWidth || 3; document.getElementById('conn-style').value = conn.strokeStyle || 'solid'; document.getElementById('conn-text').value = conn.text || '';
+            } else { propertiesPanel.classList.add('hidden'); }
+        }
+
+        // --- KEYBOARD LISTENERS ---
+        document.addEventListener('keydown', (e) => {
+            const activeTag = document.activeElement ? document.activeElement.tagName.toUpperCase() : '';
+            const isEditingText = (document.activeElement && document.activeElement.isContentEditable) || activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT';
+            
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && !isEditingText) { e.preventDefault(); saveHistory(); alert('Project temporarily saved to local storage!'); return; }
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !isEditingText) { e.preventDefault(); if (e.shiftKey) { if (historyIndex < historyStack.length - 1) loadBoardJSON(historyStack[++historyIndex]); } else { if (historyIndex > 0) loadBoardJSON(historyStack[--historyIndex]); } return; }
+            if (e.code === 'Space' && !isEditingText) { spacePressed = true; viewport.classList.add('panning'); e.preventDefault(); }
+            
+            if ((e.ctrlKey || e.metaKey) && e.key === 'c' && !isEditingText) { 
+                if(selectedElements.size > 0) clipboard = Array.from(selectedElements).map(el => ({ html: el.outerHTML, left: parseFloat(el.style.left), top: parseFloat(el.style.top) })); 
+            }
+            
+            if ((e.ctrlKey || e.metaKey) && e.key === 'v' && !isEditingText && clipboard.length > 0) { 
+                e.preventDefault(); 
+                clearSelection(); clearConnectorSelection(); const pastedEls = []; 
+                clipboard.forEach(item => { const temp = document.createElement('div'); temp.innerHTML = item.html; const newEl = temp.firstElementChild; newEl.classList.remove('selected'); newEl.removeAttribute('data-group-id'); newEl.id = 'el_' + Date.now() + Math.floor(Math.random()*1000); newEl.style.left = (item.left + 30) + 'px'; newEl.style.top = (item.top + 30) + 'px'; board.appendChild(newEl); pastedEls.push(newEl); }); 
+                pastedEls.forEach(el => selectElement(el)); updatePropertiesPanel(); saveHistory(); 
+            }
+            
+            if ((e.key === 'Delete' || e.key === 'Backspace') && !isEditingText) { e.preventDefault(); let modified = false; if(selectedElements.size > 0) { selectedElements.forEach(el => el.remove()); selectedElements.clear(); modified = true; } if(selectedConnectors.size > 0) { selectedConnectors.forEach(conn => { conn.pathNode.remove(); if(conn.labelNode) conn.labelNode.remove(); }); selectedConnectors.clear(); modified = true; } if(modified) { updatePropertiesPanel(); updateConnections(); saveHistory(); } }
+            if (!isEditingText && selectedElements.size > 0) { let dx = 0, dy = 0; const step = e.shiftKey ? 10 : 1; if (e.key === 'ArrowUp') dy = -step; else if (e.key === 'ArrowDown') dy = step; else if (e.key === 'ArrowLeft') dx = -step; else if (e.key === 'ArrowRight') dx = step; if (dx !== 0 || dy !== 0) { e.preventDefault(); selectedElements.forEach(el => { el.style.left = (parseFloat(el.style.left) + dx) + 'px'; el.style.top = (parseFloat(el.style.top) + dy) + 'px'; }); updateConnections(); } }
+        });
+        document.addEventListener('keyup', (e) => { if (e.code === 'Space') { spacePressed = false; viewport.classList.remove('panning'); isPanning = false; } if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) && selectedElements.size > 0) { saveHistory(); } });
+
+        // Tools Drag
+        document.querySelectorAll('.tool-item').forEach(item => { item.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', item.getAttribute('data-type')); }); });
+        viewport.addEventListener('dragover', e => e.preventDefault());
+        viewport.addEventListener('drop', e => { if (e.dataTransfer.files && e.dataTransfer.files.length > 0) return; e.preventDefault(); const type = e.dataTransfer.getData('text/plain'); if (type) { const coords = getBoardCoords(e.clientX, e.clientY); createComponent(type, coords.x, coords.y); } });
+
+        // Viewport interactions
+        viewport.addEventListener('mousedown', (e) => {
+            if (e.button === 1) { e.preventDefault(); if (!document.activeElement.isContentEditable) window.focus(); isPanning = true; startClientX = e.clientX; startClientY = e.clientY; viewport.classList.add('panning'); return; }
+            if (!document.activeElement.isContentEditable) window.focus();
+            
+            // Text label click on connector
+            if (e.target.classList.contains('conn-label') && !e.target.isContentEditable) {
+                const connObj = connections.find(c => c.labelNode === e.target);
+                if(connObj) { e.stopPropagation(); clearSelection(); clearConnectorSelection(); selectConnector(connObj); return; }
+            }
+
+            if (e.target.classList.contains('box') || e.target.classList.contains('circle')) { const comp = e.target.closest('.wf-component'); if (comp) { comp.classList.toggle('is-checked'); if (selectedElements.has(e.target.closest('.canvas-element'))) { document.getElementById('prop-checked').checked = comp.classList.contains('is-checked'); } saveHistory(); } }
+            if (hoveredTableEdge) { e.stopPropagation(); isResizingTable = true; const targetCell = hoveredTableEdge.cell; tableResizeData = { cell: targetCell, type: hoveredTableEdge.type, startX: e.clientX, startY: e.clientY, startWidth: targetCell.offsetWidth, startHeight: targetCell.closest('tr').offsetHeight }; if (tableResizeData.type === 'col') { const table = targetCell.closest('table'); if (table.style.tableLayout !== 'fixed') { table.querySelectorAll('th').forEach(th => th.style.width = th.offsetWidth + 'px'); table.style.tableLayout = 'fixed'; table.style.width = 'max-content'; } } return; }
+            
+            // Edit Connection Handles
+            if (e.target.classList.contains('wp-handle')) {
+                e.stopPropagation(); isDrawingConnection = false; isDraggingWaypoint = true;
+                reconnectTargetConn = Array.from(selectedConnectors)[0];
+                waypointDragIndex = parseInt(e.target.dataset.index);
+                return;
+            }
+            if (e.target.classList.contains('ghost-handle')) {
+                e.stopPropagation(); isDrawingConnection = false; isDraggingWaypoint = true;
+                reconnectTargetConn = Array.from(selectedConnectors)[0];
+                waypointDragIndex = parseInt(e.target.dataset.index);
+                const coords = getBoardCoords(e.clientX, e.clientY);
+                reconnectTargetConn.waypoints.splice(waypointDragIndex, 0, {x: coords.x, y: coords.y});
+                return;
+            }
+            if (e.target.id === 'conn-edit-start' || e.target.id === 'conn-edit-end') {
+                e.stopPropagation(); isDrawingConnection = true; document.body.classList.add('drawing-connection');
+                reconnectTargetConn = Array.from(selectedConnectors)[0];
+                reconnectEditEnd = e.target.id === 'conn-edit-start' ? 'from' : 'to';
+                connectionStartEl = reconnectEditEnd === 'from' ? reconnectTargetConn.to : reconnectTargetConn.from;
+                connectionStartNode = reconnectEditEnd === 'from' ? reconnectTargetConn.toNode : reconnectTargetConn.fromNode;
+                tempConnectionPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'); tempConnectionPath.classList.add('wf-temp-connector'); svgLayer.appendChild(tempConnectionPath);
+                reconnectTargetConn.pathNode.style.display = 'none'; reconnectTargetConn.labelNode.style.display = 'none';
+                document.getElementById('connector-handles').innerHTML = '';
+                return;
+            }
+
+            if (e.target.classList.contains('conn-node')) { e.stopPropagation(); clearSelection(); clearConnectorSelection(); isDrawingConnection = true; document.body.classList.add('drawing-connection'); connectionStartEl = e.target.closest('.canvas-element'); connectionStartNode = ['top', 'bottom', 'left', 'right'].find(c => e.target.classList.contains(c)); tempConnectionPath = document.createElementNS('http://www.w3.org/2000/svg', 'path'); tempConnectionPath.classList.add('wf-temp-connector'); svgLayer.appendChild(tempConnectionPath); return; }
+            if (e.target.classList.contains('wf-connector')) { e.stopPropagation(); clearSelection(); clearConnectorSelection(); const connObj = connections.find(c => c.id === e.target.dataset.connId); if (connObj) selectConnector(connObj); return; }
+            if (e.target.classList.contains('add-col-btn') || e.target.classList.contains('add-row-btn')) { e.stopPropagation(); const wrapper = e.target.closest('.canvas-element'); const tbody = wrapper.querySelector('tbody'); if (e.target.classList.contains('add-col-btn')) { let cols = (wrapper.dataset.columns || '').split(',').map(s => s.trim()); cols.push('New Col'); wrapper.dataset.columns = cols.join(', '); renderTable(wrapper); if (selectedElements.has(wrapper)) document.getElementById('table-columns').value = wrapper.dataset.columns; } else { const rows = tbody.querySelectorAll('tr'); let targetRow = rows[rows.length - 1]; if (selectedCell && wrapper.contains(selectedCell)) { targetRow = selectedCell.closest('tr'); } if (targetRow) { const newRow = targetRow.cloneNode(true); targetRow.parentNode.insertBefore(newRow, targetRow.nextSibling); } } autoScaleWrapper(wrapper); updatePropertiesPanel(); saveHistory(); return; }
+            if (e.target.classList.contains('resize-handle')) { e.stopPropagation(); isResizingElement = true; resizeTarget = e.target.closest('.canvas-element'); resizeDir = Array.from(e.target.classList).find(c => ['nw', 'ne', 'sw', 'se', 'n', 's', 'e', 'w'].includes(c)); startClientX = e.clientX; startClientY = e.clientY; startWidth = resizeTarget.offsetWidth; startHeight = resizeTarget.offsetHeight; startLeft = parseFloat(resizeTarget.style.left) || 0; startTop = parseFloat(resizeTarget.style.top) || 0; startRatio = startWidth / startHeight; sizeTooltip.style.display = 'block'; return; }
+
+            const targetWrapper = e.target.closest('.canvas-element');
+            if (targetWrapper && !spacePressed && !e.target.isContentEditable) {
+                e.stopPropagation(); if (e.shiftKey) toggleSelection(targetWrapper); else if (!selectedElements.has(targetWrapper)) { clearSelection(); clearConnectorSelection(); selectElement(targetWrapper); }
+                if (targetWrapper.dataset.type === 'table') { const cell = e.target.closest('td, th'); document.querySelectorAll('.selected-cell').forEach(c => c.classList.remove('selected-cell')); if (cell && cell.tagName === 'TD') { cell.classList.add('selected-cell'); selectedCell = cell; } else { selectedCell = null; } } else { document.querySelectorAll('.selected-cell').forEach(c => c.classList.remove('selected-cell')); selectedCell = null; }
+                
+                updatePropertiesPanel(); const coords = getBoardCoords(e.clientX, e.clientY); 
+                draggedElementsData = Array.from(selectedElements).map(el => ({ el: el, offsetX: coords.x - (parseFloat(el.style.left) || 0), offsetY: coords.y - (parseFloat(el.style.top) || 0) }));
+                if ((targetWrapper.dataset.type === 'browser' || targetWrapper.dataset.type === 'mobile') && selectedElements.size === 1) { 
+                    const frameRect = targetWrapper.getBoundingClientRect(); 
+                    document.querySelectorAll('.canvas-element').forEach(childEl => { 
+                        if (childEl === targetWrapper || childEl.dataset.type === 'browser' || childEl.dataset.type === 'mobile') return; 
+                        const childRect = childEl.getBoundingClientRect(); 
+                        if (childRect.left >= frameRect.left && childRect.right <= frameRect.right && childRect.top >= frameRect.top && childRect.bottom <= frameRect.bottom) { 
+                            if (!draggedElementsData.find(d => d.el === childEl)) { 
+                                draggedElementsData.push({ el: childEl, offsetX: coords.x - (parseFloat(childEl.style.left) || 0), offsetY: coords.y - (parseFloat(childEl.style.top) || 0) }); 
+                            } 
+                        } 
+                    }); 
+                }
+                snapTargets = []; document.querySelectorAll('.canvas-element').forEach(el => { if (!selectedElements.has(el)) { snapTargets.push({ l: parseFloat(el.style.left), cx: parseFloat(el.style.left) + el.offsetWidth / 2, r: parseFloat(el.style.left) + el.offsetWidth, t: parseFloat(el.style.top), cy: parseFloat(el.style.top) + el.offsetHeight / 2, b: parseFloat(el.style.top) + el.offsetHeight }); } }); isDraggingElements = true; return;
+            }
+
+            if(!e.target.isContentEditable && e.target !== helpBtn && !helpModal.contains(e.target)) {
+                clearSelection(); clearConnectorSelection(); updatePropertiesPanel();
+                if (spacePressed) { isPanning = true; startClientX = e.clientX; startClientY = e.clientY; } else { isMarquee = true; const coords = getBoardCoords(e.clientX, e.clientY); startBoardX = coords.x; startBoardY = coords.y; marquee.style.left = `${startBoardX}px`; marquee.style.top = `${startBoardY}px`; marquee.style.width = '0px'; marquee.style.height = '0px'; marquee.style.display = 'block'; }
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            const resizerV = document.getElementById('table-resizer-v'); const resizerH = document.getElementById('table-resizer-h');
+            
+            // Handle Waypoint Dragging & Snapping
+            if (isDraggingWaypoint && reconnectTargetConn) {
+                const coords = getBoardCoords(e.clientX, e.clientY);
+                let prev = waypointDragIndex > 0 ? reconnectTargetConn.waypoints[waypointDragIndex-1] : getShapeEdges(reconnectTargetConn.from)[reconnectTargetConn.fromNode];
+                let next = waypointDragIndex < reconnectTargetConn.waypoints.length - 1 ? reconnectTargetConn.waypoints[waypointDragIndex+1] : getShapeEdges(reconnectTargetConn.to)[reconnectTargetConn.toNode];
+
+                if (e.shiftKey || reconnectTargetConn.type === 'elbow') {
+                   if (Math.abs(coords.x - prev.x) < 20 / scale) coords.x = prev.x;
+                   else if (Math.abs(coords.x - next.x) < 20 / scale) coords.x = next.x;
+                   if (Math.abs(coords.y - prev.y) < 20 / scale) coords.y = prev.y;
+                   else if (Math.abs(coords.y - next.y) < 20 / scale) coords.y = next.y;
+                }
+                reconnectTargetConn.waypoints[waypointDragIndex] = { x: coords.x, y: coords.y };
+                updateConnections(); return;
+            }
+
+            if (!isDraggingElements && !isPanning && !isMarquee && !isResizingElement && !isResizingTable && !isDrawingConnection) {
+                let isEdgeHover = false;
+                if (e.target.tagName === 'TH' || e.target.tagName === 'TD') {
+                    const rect = e.target.getBoundingClientRect(); const isRightEdge = Math.abs(e.clientX - rect.right) <= 5; const isBottomEdge = Math.abs(e.clientY - rect.bottom) <= 5; const boardRect = board.getBoundingClientRect();
+                    if (isRightEdge) { document.body.style.cursor = 'col-resize'; hoveredTableEdge = { cell: e.target, type: 'col' }; isEdgeHover = true; resizerV.style.left = ((rect.right - boardRect.left) / scale) + 'px'; resizerV.style.top = ((rect.top - boardRect.top) / scale) + 'px'; resizerV.style.height = (rect.height / scale) + 'px'; resizerV.style.display = 'block'; resizerH.style.display = 'none'; } 
+                    else if (isBottomEdge) { document.body.style.cursor = 'row-resize'; hoveredTableEdge = { cell: e.target, type: 'row' }; isEdgeHover = true; resizerH.style.top = ((rect.bottom - boardRect.top) / scale) + 'px'; resizerH.style.left = ((rect.left - boardRect.left) / scale) + 'px'; resizerH.style.width = (rect.width / scale) + 'px'; resizerH.style.display = 'block'; resizerV.style.display = 'none'; }
+                }
+                if (!isEdgeHover) { document.body.style.cursor = ''; hoveredTableEdge = null; resizerV.style.display = 'none'; resizerH.style.display = 'none'; }
+            }
+
+            if (isResizingTable) {
+                const dx = (e.clientX - tableResizeData.startX) / scale; const dy = (e.clientY - tableResizeData.startY) / scale;
+                if (tableResizeData.type === 'col') { tableResizeData.cell.style.width = Math.max(20, tableResizeData.startWidth + dx) + 'px'; const rect = tableResizeData.cell.getBoundingClientRect(); const boardRect = board.getBoundingClientRect(); resizerV.style.left = ((rect.right - boardRect.left) / scale) + 'px'; } 
+                else { const tr = tableResizeData.cell.closest('tr'); tr.style.height = Math.max(20, tableResizeData.startHeight + dy) + 'px'; const rect = tableResizeData.cell.getBoundingClientRect(); const boardRect = board.getBoundingClientRect(); resizerH.style.top = ((rect.bottom - boardRect.top) / scale) + 'px'; }
+                autoScaleWrapper(tableResizeData.cell.closest('.canvas-element')); updateConnections(); return; 
+            }
+
+            if (isDrawingConnection) {
+                const coords = getBoardCoords(e.clientX, e.clientY); const e1 = getShapeEdges(connectionStartEl); const p1 = e1[connectionStartNode]; document.querySelectorAll('.conn-node.snap-hover').forEach(n => n.classList.remove('snap-hover'));
+                const elementsUnder = document.elementsFromPoint(e.clientX, e.clientY); const nodeUnder = elementsUnder.find(el => el.classList && el.classList.contains('conn-node') && el.closest('.canvas-element') !== connectionStartEl);
+                let p2 = { x: coords.x, y: coords.y };
+                if (nodeUnder) { nodeUnder.classList.add('snap-hover'); const targetEl = nodeUnder.closest('.canvas-element'); const targetNodeStr = ['top', 'bottom', 'left', 'right'].find(c => nodeUnder.classList.contains(c)); const e2 = getShapeEdges(targetEl); p2 = e2[targetNodeStr]; }
+                tempConnectionPath.setAttribute('d', `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`); return;
+            }
+            
+            let foundTableWrapper = false;
+            if (!isDraggingElements && !isPanning && !isMarquee && !isResizingElement && !isResizingTable) {
+                const wrapper = e.target.closest ? e.target.closest('.canvas-element[data-type="table"]') : null;
+                if (wrapper && wrapper.classList.contains('selected')) {
+                    foundTableWrapper = true; const rows = wrapper.querySelectorAll('tbody tr'); const colBtn = wrapper.querySelector('.add-col-btn'); const rowBtn = wrapper.querySelector('.add-row-btn');
+                    let isHoveringLastRow = rowBtn.style.display === 'flex'; let isHoveringLastCol = colBtn.style.display === 'flex';
+                    const cell = e.target.closest('th, td'); if (cell) { const tr = cell.closest('tr'); isHoveringLastRow = (tr === rows[rows.length - 1]); isHoveringLastCol = (cell === tr.lastElementChild); } else if (e.target.classList.contains('add-col-btn')) { isHoveringLastCol = true; } else if (e.target.classList.contains('add-row-btn')) { isHoveringLastRow = true; }
+                    colBtn.style.display = isHoveringLastCol ? 'flex' : 'none'; rowBtn.style.display = isHoveringLastRow ? 'flex' : 'none';
+                }
+            }
+            if (!foundTableWrapper) { document.querySelectorAll('.add-col-btn, .add-row-btn').forEach(btn => btn.style.display = 'none'); }
+
+            if (isResizingElement && resizeTarget) {
+                const dx = (e.clientX - startClientX) / scale; const dy = (e.clientY - startClientY) / scale;
+                if(resizeTarget.dataset.type !== 'table') {
+                    let newWidth = startWidth, newHeight = startHeight, newLeft = startLeft, newTop = startTop;
+                    if (resizeDir.includes('e')) newWidth = startWidth + dx; if (resizeDir.includes('s')) newHeight = startHeight + dy; if (resizeDir.includes('w')) newWidth = startWidth - dx; if (resizeDir.includes('n')) newHeight = startHeight - dy;
+                    if (e.shiftKey || isRatioLocked) { if (Math.abs(dx) > Math.abs(dy)) { newWidth = Math.max(20, newWidth); newHeight = newWidth / startRatio; } else { newHeight = Math.max(20, newHeight); newWidth = newHeight * startRatio; } } else { newWidth = Math.max(20, newWidth); newHeight = Math.max(20, newHeight); }
+                    if (resizeDir.includes('w')) newLeft = startLeft + (startWidth - newWidth); if (resizeDir.includes('n')) newTop = startTop + (startHeight - newHeight);
+                    resizeTarget.style.width = `${newWidth}px`; resizeTarget.style.height = `${newHeight}px`; resizeTarget.style.left = `${newLeft}px`; resizeTarget.style.top = `${newTop}px`;
+                    sizeTooltip.style.left = (e.clientX + 15) + 'px'; sizeTooltip.style.top = (e.clientY + 15) + 'px'; sizeTooltip.innerText = `W: ${Math.round(newWidth)} | H: ${Math.round(newHeight)}`; updateConnections();
+                }
+            } else if (isDraggingElements) {
+                const coords = getBoardCoords(e.clientX, e.clientY); let primaryData = draggedElementsData[0]; let propL = coords.x - primaryData.offsetX; let propT = coords.y - primaryData.offsetY; let w = primaryData.el.offsetWidth; let h = primaryData.el.offsetHeight;
+                let snapX = null, snapLineX = null, snapY = null, snapLineY = null; const SNAP_DIST = 8 / scale;
+                const myXs = [ {val: propL, offset: 0}, {val: propL + w/2, offset: w/2}, {val: propL + w, offset: w} ]; const myYs = [ {val: propT, offset: 0}, {val: propT + h/2, offset: h/2}, {val: propT + h, offset: h} ];
+                for(let target of snapTargets) { if (snapX === null) { for(let mx of myXs) { for(let tx of [target.l, target.cx, target.r]) { if (Math.abs(mx.val - tx) < SNAP_DIST) { snapX = tx - mx.offset; snapLineX = tx; break; } } if (snapX !== null) break; } } if (snapY === null) { for(let my of myYs) { for(let ty of [target.t, target.cy, target.b]) { if (Math.abs(my.val - ty) < SNAP_DIST) { snapY = ty - my.offset; snapLineY = ty; break; } } if (snapY !== null) break; } } }
+                let diffX = snapX !== null ? (snapX - propL) : 0; let diffY = snapY !== null ? (snapY - propT) : 0;
+                draggedElementsData.forEach(data => { data.el.style.left = `${coords.x - data.offsetX + diffX}px`; data.el.style.top = `${coords.y - data.offsetY + diffY}px`; });
+                const gV = document.getElementById('guide-v'); const gH = document.getElementById('guide-h');
+                if (snapX !== null && !e.shiftKey) { gV.style.left = snapLineX + 'px'; gV.style.display = 'block'; } else gV.style.display = 'none'; if (snapY !== null && !e.shiftKey) { gH.style.top = snapLineY + 'px'; gH.style.display = 'block'; } else gH.style.display = 'none'; updateConnections();
+            } else if (isPanning) { panX += e.clientX - startClientX; panY += e.clientY - startClientY; startClientX = e.clientX; startClientY = e.clientY; updateBoardTransform();
+            } else if (isMarquee) {
+                const coords = getBoardCoords(e.clientX, e.clientY); const minX = Math.min(startBoardX, coords.x); const minY = Math.min(startBoardY, coords.y); const width = Math.abs(coords.x - startBoardX); const height = Math.abs(coords.y - startBoardY);
+                marquee.style.left = `${minX}px`; marquee.style.top = `${minY}px`; marquee.style.width = `${width}px`; marquee.style.height = `${height}px`; const mRect = { left: minX, right: minX + width, top: minY, bottom: minY + height };
+                document.querySelectorAll('.canvas-element').forEach(el => { const elRect = { left: parseFloat(el.style.left), right: parseFloat(el.style.left) + el.offsetWidth, top: parseFloat(el.style.top), bottom: parseFloat(el.style.top) + el.offsetHeight }; const intersects = !(mRect.right < elRect.left || mRect.left > elRect.right || mRect.bottom < elRect.top || mRect.top > elRect.bottom); if (intersects) selectElement(el); else if (!e.shiftKey) { el.classList.remove('selected'); selectedElements.delete(el); } }); updatePropertiesPanel();
+            }
+        });
+
+        window.addEventListener('mouseup', (e) => {
+            if (e.button === 1 && isPanning) { isPanning = false; viewport.classList.remove('panning'); return; } let recordHistory = false;
+            
+            if (isDraggingWaypoint) {
+                isDraggingWaypoint = false; reconnectTargetConn = null; waypointDragIndex = -1; recordHistory = true;
+            }
+
+            if (isDrawingConnection && e && e.clientX) { 
+                document.body.classList.remove('drawing-connection'); 
+                const elementsUnder = document.elementsFromPoint(e.clientX, e.clientY); 
+                const targetNode = elementsUnder.find(el => el.classList && el.classList.contains('conn-node') && el.closest('.canvas-element') !== connectionStartEl); 
+                let targetEl = null; let targetNodeStr = null; 
+                
+                if (targetNode) { 
+                    targetEl = targetNode.closest('.canvas-element'); targetNodeStr = ['top', 'bottom', 'left', 'right'].find(c => targetNode.classList.contains(c)); 
+                } else { 
+                    targetEl = elementsUnder.find(el => el.classList && el.classList.contains('canvas-element') && el !== connectionStartEl); 
+                    if (targetEl) { const coords = getBoardCoords(e.clientX, e.clientY); const edges = getShapeEdges(targetEl); let minDist = Infinity; ['top', 'bottom', 'left', 'right'].forEach(pos => { const d = Math.hypot(edges[pos].x - coords.x, edges[pos].y - coords.y); if (d < minDist) { minDist = d; targetNodeStr = pos; } }); } 
+                } 
+                
+                if (targetEl && targetNodeStr) { 
+                    if (reconnectTargetConn) {
+                        if (reconnectEditEnd === 'from') { reconnectTargetConn.from = targetEl; reconnectTargetConn.fromNode = targetNodeStr; } else { reconnectTargetConn.to = targetEl; reconnectTargetConn.toNode = targetNodeStr; }
+                        reconnectTargetConn.pathNode.style.display = ''; if(reconnectTargetConn.text) reconnectTargetConn.labelNode.style.display = '';
+                        updateConnections(); recordHistory = true;
+                    } else {
+                        createConnector(connectionStartEl, targetEl, connectionStartNode, targetNodeStr); recordHistory = true; 
+                    }
+                } else {
+                    if (reconnectTargetConn) { reconnectTargetConn.pathNode.style.display = ''; if(reconnectTargetConn.text) reconnectTargetConn.labelNode.style.display = ''; updateConnections(); }
+                }
+                if (tempConnectionPath) tempConnectionPath.remove(); tempConnectionPath = null; isDrawingConnection = false; connectionStartEl = null; connectionStartNode = null; reconnectTargetConn = null; reconnectEditEnd = null; document.querySelectorAll('.conn-node.snap-hover').forEach(n => n.classList.remove('snap-hover')); 
+            }
+
+            if (isResizingTable) { isResizingTable = false; tableResizeData = null; document.body.style.cursor = ''; document.getElementById('table-resizer-v').style.display = 'none'; document.getElementById('table-resizer-h').style.display = 'none'; recordHistory = true;}
+            document.getElementById('guide-v').style.display = 'none'; document.getElementById('guide-h').style.display = 'none'; snapTargets = []; const wasResizing = isResizingElement; const wasDragging = isDraggingElements; isDraggingElements = false; isPanning = false; isResizingElement = false; isMarquee = false; marquee.style.display = 'none'; sizeTooltip.style.display = 'none'; if (wasResizing || wasDragging) { recordHistory = true; try { updatePropertiesPanel(); } catch(err){} } if (recordHistory) saveHistory();
+        });
+
+        function forceCloseEditor() { if (document.activeElement && document.activeElement.isContentEditable) document.activeElement.blur(); }
+        viewport.addEventListener('wheel', (e) => { e.preventDefault(); forceCloseEditor(); const newScale = Math.min(Math.max(0.2, scale + (e.deltaY * -0.001)), 3); const rect = viewport.getBoundingClientRect(); panX = (e.clientX - rect.left) - ((e.clientX - rect.left) - panX) * (newScale / scale); panY = (e.clientY - rect.top) - ((e.clientY - rect.top) - panY) * (newScale / scale); scale = newScale; updateBoardTransform(); }, { passive: false });
+        
+        viewport.addEventListener('dblclick', (e) => { 
+            // Double Click to Delete Waypoint
+            if (e.target.classList.contains('wp-handle')) {
+                const conn = Array.from(selectedConnectors)[0];
+                const idx = parseInt(e.target.dataset.index);
+                if (conn && conn.waypoints) { conn.waypoints.splice(idx, 1); updateConnections(); saveHistory(); }
+                return;
+            }
+
+            let target = e.target.closest('.editable'); 
+            if (!target) { const wrapper = e.target.closest('.canvas-element'); if (wrapper && wrapper.dataset.type !== 'table' && wrapper.dataset.type !== 'tabs') target = wrapper.querySelector('.editable'); } 
+            if (target && !target.isContentEditable) { 
+                e.stopPropagation(); target.contentEditable = 'true'; target.focus(); const range = document.createRange(); range.selectNodeContents(target); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range); 
+                target.onblur = () => { 
+                    target.contentEditable = 'false'; 
+                    if (target.classList.contains('conn-label')) {
+                        const conn = connections.find(c => c.labelNode === target);
+                        if (conn) { conn.text = target.innerText.trim(); if(selectedConnectors.has(conn)) document.getElementById('conn-text').value = conn.text; updateConnections(); }
+                    } else {
+                        if (!target.innerText.trim()) target.innerText = '\u00A0'; 
+                        const wrapper = target.closest('.canvas-element'); 
+                        if (wrapper.dataset.type === 'dropdown') { let opts = (wrapper.dataset.options || '').split(',').map(s => s.trim()); opts[0] = target.innerText; wrapper.dataset.options = opts.join(', '); renderDropdownList(wrapper); if (selectedElements.has(wrapper)) document.getElementById('dropdown-options').value = wrapper.dataset.options; } else if (wrapper.dataset.type === 'table' && target.tagName === 'TH') { const ths = Array.from(wrapper.querySelectorAll('th')); wrapper.dataset.columns = ths.map(th => th.innerText).join(', '); if (selectedElements.has(wrapper)) document.getElementById('table-columns').value = wrapper.dataset.columns; } else if (wrapper.dataset.type === 'tabs' && target.closest('.wf-tab-item')) { const items = Array.from(wrapper.querySelectorAll('.wf-tab-item span')); wrapper.dataset.tabs = items.map(s => s.innerText).join(', '); if (selectedElements.has(wrapper)) document.getElementById('tab-options').value = wrapper.dataset.tabs; } 
+                    }
+                    updatePropertiesPanel(); saveHistory(); 
+                }; 
+            } 
+        });
+
+        // Handlers
+        document.getElementById('prop-group').addEventListener('click', () => { if (selectedElements.size > 1) { const groupId = 'group-' + Date.now(); selectedElements.forEach(el => el.dataset.groupId = groupId); saveHistory(); } });
+        document.getElementById('prop-ungroup').addEventListener('click', () => { selectedElements.forEach(el => el.removeAttribute('data-group-id')); saveHistory(); });
+        document.getElementById('prop-front').addEventListener('click', () => { selectedElements.forEach(el => board.appendChild(el)); saveHistory(); });
+        document.getElementById('prop-forward').addEventListener('click', () => { selectedElements.forEach(el => { if (el.nextElementSibling) el.parentNode.insertBefore(el.nextElementSibling, el); }); saveHistory(); });
+        document.getElementById('prop-backward').addEventListener('click', () => { selectedElements.forEach(el => { if (el.previousElementSibling && el.previousElementSibling !== svgLayer) { el.parentNode.insertBefore(el, el.previousElementSibling); } }); saveHistory(); });
+        document.getElementById('prop-back').addEventListener('click', () => { selectedElements.forEach(el => { if(board.children.length > 1) board.insertBefore(el, board.children[1]); }); saveHistory(); });
+        
+        // Connection Handlers
+        document.getElementById('conn-type').addEventListener('change', (e) => { selectedConnectors.forEach(c => { c.type = e.target.value; }); updateConnections(); saveHistory(); });
+        document.getElementById('conn-start').addEventListener('change', (e) => { selectedConnectors.forEach(c => { c.startMarker = e.target.value; c.pathNode.setAttribute('marker-start', e.target.value); }); saveHistory(); });
+        document.getElementById('conn-end').addEventListener('change', (e) => { selectedConnectors.forEach(c => { c.endMarker = e.target.value; c.pathNode.setAttribute('marker-end', e.target.value); }); saveHistory(); });
+        document.getElementById('conn-weight').addEventListener('input', (e) => { selectedConnectors.forEach(c => { c.strokeWidth = parseInt(e.target.value) || 3; }); updateConnections(); saveHistory(); });
+        document.getElementById('conn-style').addEventListener('change', (e) => { selectedConnectors.forEach(c => { c.strokeStyle = e.target.value; }); updateConnections(); saveHistory(); });
+        document.getElementById('conn-text').addEventListener('input', (e) => { selectedConnectors.forEach(c => { c.text = e.target.value; }); updateConnections(); saveHistory(); });
+
+        document.getElementById('prop-lock-ratio').addEventListener('click', (e) => { isRatioLocked = !isRatioLocked; e.target.innerText = isRatioLocked ? '🔒' : '🔓'; e.target.style.background = isRatioLocked ? '#ccc' : ''; });
+
+        document.getElementById('prop-w').addEventListener('input', (e) => { const newW = Math.max(20, e.target.value); selectedElements.forEach(el => { if (isRatioLocked) { const ratio = el.offsetWidth / el.offsetHeight; const newH = newW / ratio; el.style.height = newH + 'px'; document.getElementById('prop-h').value = Math.round(newH); } el.style.width = newW + 'px'; }); updateConnections(); });
+        document.getElementById('prop-w').addEventListener('change', () => saveHistory());
+        document.getElementById('prop-h').addEventListener('input', (e) => { const newH = Math.max(20, e.target.value); selectedElements.forEach(el => { if (isRatioLocked) { const ratio = el.offsetWidth / el.offsetHeight; const newW = newH * ratio; el.style.width = newW + 'px'; document.getElementById('prop-w').value = Math.round(newW); } el.style.height = newH + 'px'; }); updateConnections(); });
+        document.getElementById('prop-h').addEventListener('change', () => saveHistory());
+        document.getElementById('prop-fontsize').addEventListener('input', (e) => { selectedElements.forEach(el => { el.style.fontSize = e.target.value + 'px'; const comp = el.querySelector('.wf-component'); if (comp) comp.style.fontSize = e.target.value + 'px'; }); updateConnections(); });
+        document.getElementById('prop-fontsize').addEventListener('change', () => saveHistory());
+
+        const toggleStyle = (styleProp, activeVal, inactiveVal) => { selectedElements.forEach(el => { const comp = el.querySelector('.wf-component'); if (!comp) return; const current = comp.style[styleProp] || getComputedStyle(comp)[styleProp]; comp.style[styleProp] = (current === activeVal || current === '700') ? inactiveVal : activeVal; }); updatePropertiesPanel(); saveHistory(); };
+        const toggleDecoration = (val) => { selectedElements.forEach(el => { const comp = el.querySelector('.wf-component'); if (!comp) return; let current = comp.style.textDecoration || ''; if (current.includes(val)) current = current.replace(val, '').trim(); else current = (current + ' ' + val).trim(); comp.style.textDecoration = current; }); updatePropertiesPanel(); saveHistory(); };
+        const setAlignment = (align) => { selectedElements.forEach(el => { const comp = el.querySelector('.wf-component'); if (comp) comp.style.textAlign = align; const editable = el.querySelector('.editable'); if (editable) editable.style.textAlign = align; }); updatePropertiesPanel(); saveHistory(); };
+
+        document.getElementById('prop-bold').addEventListener('click', () => toggleStyle('fontWeight', 'bold', 'normal'));
+        document.getElementById('prop-italic').addEventListener('click', () => toggleStyle('fontStyle', 'italic', 'normal'));
+        document.getElementById('prop-underline').addEventListener('click', () => toggleDecoration('underline'));
+        document.getElementById('prop-strike').addEventListener('click', () => toggleDecoration('line-through'));
+        
+        document.getElementById('prop-align-left').addEventListener('click', () => setAlignment('left'));
+        document.getElementById('prop-align-center').addEventListener('click', () => setAlignment('center'));
+        document.getElementById('prop-align-right').addEventListener('click', () => setAlignment('right'));
+
+        document.getElementById('state-select').addEventListener('change', (e) => { selectedElements.forEach(el => { el.classList.remove('state-disabled', 'state-focus', 'state-active', 'state-expanded', 'state-readonly'); if (e.target.value !== 'default') el.classList.add(`state-${e.target.value}`); }); saveHistory(); });
+        document.getElementById('prop-checked').addEventListener('change', (e) => { selectedElements.forEach(el => { if (el.dataset.type === 'checkbox' || el.dataset.type === 'radio') { const comp = el.querySelector('.wf-component'); if (comp) { if (e.target.checked) comp.classList.add('is-checked'); else comp.classList.remove('is-checked'); } } }); saveHistory(); });
+
+        const dropdownInput = document.getElementById('dropdown-options'); dropdownInput.addEventListener('input', (e) => { if (selectedElements.size === 1) { const el = Array.from(selectedElements)[0]; if (el.dataset.type === 'dropdown') { el.dataset.options = e.target.value; renderDropdownList(el); updatePropertiesPanel(); } } }); dropdownInput.addEventListener('change', () => saveHistory());
+        const tableColsInput = document.getElementById('table-columns'); tableColsInput.addEventListener('input', (e) => { if (selectedElements.size === 1) { const el = Array.from(selectedElements)[0]; if (el.dataset.type === 'table') { el.dataset.columns = e.target.value; renderTable(el); autoScaleWrapper(el); updatePropertiesPanel(); } } }); tableColsInput.addEventListener('change', () => saveHistory());
+        const tabOptionsInput = document.getElementById('tab-options'); tabOptionsInput.addEventListener('input', (e) => { if (selectedElements.size === 1) { const el = Array.from(selectedElements)[0]; if (el.dataset.type === 'tabs') { el.dataset.tabs = e.target.value; renderTabs(el); } } }); tabOptionsInput.addEventListener('change', () => saveHistory());
+        const tabActiveInput = document.getElementById('tab-active-index'); tabActiveInput.addEventListener('input', (e) => { if (selectedElements.size === 1) { const el = Array.from(selectedElements)[0]; if (el.dataset.type === 'tabs') { el.dataset.activeTab = e.target.value; renderTabs(el); } } }); tabActiveInput.addEventListener('change', () => saveHistory());
+
+        document.getElementById('cell-type').addEventListener('change', (e) => { if (selectedCell) { const type = e.target.value; selectedCell.dataset.cellType = type; let text = 'Data'; const editableSpan = selectedCell.querySelector('.editable'); if (editableSpan) text = editableSpan.innerText; if (type === 'button') { selectedCell.innerHTML = `<div class="wf-btn" style="width:100%; box-sizing:border-box; padding:4px; font-weight:bold;"><span class="editable">${text}</span></div>`; } else if (type === 'dropdown') { selectedCell.innerHTML = `<div class="wf-select" style="width:100%; box-sizing:border-box; padding:4px;"><span class="editable">${text}</span></div>`; } else if (type === 'paragraph') { selectedCell.innerHTML = `<div class="wf-p editable" style="width:100%; box-sizing:border-box; font-size:12px; text-align:left;">${text}</div>`; } else { selectedCell.innerHTML = `<span class="editable">${text}</span>`; } saveHistory(); } });
+
+        document.getElementById('save-btn').addEventListener('click', () => { let fileName = prompt("Please enter a name for your JSON save file:", "wireframe-project"); if (fileName === null) return; fileName = fileName.trim() || "wireframe-project"; if (!fileName.endsWith('.json')) fileName += '.json'; const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([getBoardJSON()], { type: 'application/json' })); link.download = fileName; link.click(); });
+        document.getElementById('load-btn').addEventListener('click', () => document.getElementById('load-input').click());
+        document.getElementById('load-input').addEventListener('change', (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (event) => { loadBoardJSON(event.target.result); historyStack = []; historyIndex = -1; saveHistory(); }; reader.readAsText(file); e.target.value = ''; });
+        document.getElementById('clear-btn').addEventListener('click', () => { if(confirm("Are you sure you want to clear the board? This cannot be undone.")) { document.querySelectorAll('.canvas-element').forEach(el => el.remove()); connections.forEach(c => { c.pathNode.remove(); if(c.labelNode) c.labelNode.remove(); }); connections = []; clearSelection(); clearConnectorSelection(); historyStack = []; historyIndex = -1; saveHistory(); } });
+
+        // Copy Selected to Image Clipboard
+        document.getElementById('prop-copy-image').addEventListener('click', () => {
+            if (selectedElements.size === 0) return;
+            selectedElements.forEach(el => { el.classList.remove('selected'); el.querySelectorAll('.selected-cell').forEach(c => c.classList.remove('selected-cell')); });
+            
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            selectedElements.forEach(el => { const x = parseFloat(el.style.left); const y = parseFloat(el.style.top); const w = el.offsetWidth; const h = el.offsetHeight; if (x < minX) minX = x; if (y < minY) minY = y; if (x + w > maxX) maxX = x + w; if (y + h > maxY) maxY = y + h; });
+            const padding = 10; minX -= padding; minY -= padding; maxX += padding; maxY += padding;
+            
+            const exportContainer = document.createElement('div'); exportContainer.style.position = 'absolute'; exportContainer.style.top = '-9999px'; exportContainer.style.left = '-9999px'; exportContainer.style.width = `${maxX - minX}px`; exportContainer.style.height = `${maxY - minY}px`; exportContainer.style.background = 'transparent'; 
+            document.body.appendChild(exportContainer);
+            
+            selectedElements.forEach(el => { const clone = el.cloneNode(true); clone.style.left = `${parseFloat(el.style.left) - minX}px`; clone.style.top = `${parseFloat(el.style.top) - minY}px`; exportContainer.appendChild(clone); });
+
+            html2canvas(exportContainer, { backgroundColor: null }).then(canvas => { 
+                canvas.toBlob(blob => {
+                    try {
+                        navigator.clipboard.write([new ClipboardItem({'image/png': blob})]).then(() => alert("Copied to clipboard as image! \n\n(Tip: You can press CTRL+V to paste it right back onto the board!)"));
+                    } catch(err) {
+                        alert("Your browser blocked the clipboard write. Note: 'Copy as Image' usually requires the file to be hosted on HTTPS or Localhost.");
+                    }
+                });
+                document.body.removeChild(exportContainer); 
+                selectedElements.forEach(el => el.classList.add('selected'));
+            });
+        });
+
+        document.getElementById('export-btn').addEventListener('click', () => {
+            if (selectedElements.size === 0) return alert("Please select one or more components to export!");
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            selectedElements.forEach(el => { const x = parseFloat(el.style.left); const y = parseFloat(el.style.top); const w = el.offsetWidth; const h = el.offsetHeight; if (x < minX) minX = x; if (y < minY) minY = y; if (x + w > maxX) maxX = x + w; if (y + h > maxY) maxY = y + h; });
+            const padding = 20; minX -= padding; minY -= padding; maxX += padding; maxY += padding;
+            const exportContainer = document.createElement('div'); exportContainer.style.position = 'absolute'; exportContainer.style.top = '-9999px'; exportContainer.style.left = '-9999px'; exportContainer.style.width = `${maxX - minX}px`; exportContainer.style.height = `${maxY - minY}px`; exportContainer.style.background = 'var(--canvas-bg)'; 
+            document.body.appendChild(exportContainer);
+            selectedElements.forEach(el => { const clone = el.cloneNode(true); clone.classList.remove('selected'); clone.style.left = `${parseFloat(el.style.left) - minX}px`; clone.style.top = `${parseFloat(el.style.top) - minY}px`; clone.querySelectorAll('.selected-cell').forEach(c => c.classList.remove('selected-cell')); exportContainer.appendChild(clone); });
+            const svgClone = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svgClone.style.position = 'absolute'; svgClone.style.top = '0'; svgClone.style.left = '0'; svgClone.style.width = '100%'; svgClone.style.height = '100%';
+            svgClone.appendChild(svgLayer.querySelector('defs').cloneNode(true));
+            connections.forEach(conn => { 
+                if (selectedElements.has(conn.from) && selectedElements.has(conn.to)) { 
+                    const lineClone = conn.pathNode.cloneNode(true); lineClone.setAttribute('d', calculatePath(conn.from, conn.to, conn.type, conn.fromNode, conn.toNode, -minX, -minY, conn.waypoints)); lineClone.classList.remove('selected'); svgClone.appendChild(lineClone); 
+                    if (conn.text && conn.labelNode) {
+                        const labelClone = conn.labelNode.cloneNode(true);
+                        labelClone.style.left = `${parseFloat(conn.labelNode.style.left) - minX}px`;
+                        labelClone.style.top = `${parseFloat(conn.labelNode.style.top) - minY}px`;
+                        exportContainer.appendChild(labelClone);
+                    }
+                } 
+            });
+            exportContainer.insertBefore(svgClone, exportContainer.firstChild);
+            html2canvas(exportContainer, { backgroundColor: '#e0e0e0' }).then(canvas => { const link = document.createElement('a'); link.download = 'wireframe-export.png'; link.href = canvas.toDataURL('image/png'); link.click(); document.body.removeChild(exportContainer); });
+        });
     </script>
 </body>
 </html>
