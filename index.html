@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Wireframe Tool</title>
+    <title>Free HTML Wireframe Tool</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555555'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/%3E%3C/svg%3E" type="image/svg+xml">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -146,6 +146,9 @@
 
         .wf-dropdown-list { display: none; position: absolute; top: 100%; left: 5px; right: 5px; background: var(--element-bg); border: 2px solid var(--border-color); border-top: none; z-index: 15; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: calc(100% - 10px); }
         .canvas-element.state-expanded .wf-dropdown-list { display: block; }
+        /* Add selection visual feedback for expanded dropdown list */
+        .canvas-element.selected.state-expanded .wf-dropdown-list { border-color: var(--select-color); box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2); }
+        
         .wf-dropdown-item { padding: 6px; border-bottom: 1px solid var(--dot-color); font-size: 0.9em; text-align: left; white-space: normal; color: var(--text-color); }
         .wf-dropdown-item:last-child { border-bottom: none; }
 
@@ -1055,7 +1058,17 @@
             selectedElements.forEach(el => { el.classList.remove('selected'); el.querySelectorAll('.selected-cell').forEach(c => c.classList.remove('selected-cell')); });
             
             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-            selectedElements.forEach(el => { const x = parseFloat(el.style.left); const y = parseFloat(el.style.top); const w = el.offsetWidth; const h = el.offsetHeight; if (x < minX) minX = x; if (y < minY) minY = y; if (x + w > maxX) maxX = x + w; if (y + h > maxY) maxY = y + h; });
+            selectedElements.forEach(el => { 
+                const x = parseFloat(el.style.left); const y = parseFloat(el.style.top); const w = el.offsetWidth; let h = el.offsetHeight; 
+                
+                // --- BUG FIX: Account for Expanded Dropdown Lists ---
+                if (el.dataset.type === 'dropdown' && el.classList.contains('state-expanded')) {
+                    const list = el.querySelector('.wf-dropdown-list');
+                    if (list) h += list.offsetHeight;
+                }
+
+                if (x < minX) minX = x; if (y < minY) minY = y; if (x + w > maxX) maxX = x + w; if (y + h > maxY) maxY = y + h; 
+            });
             const padding = 10; minX -= padding; minY -= padding; maxX += padding; maxY += padding;
             
             const exportContainer = document.createElement('div'); exportContainer.style.position = 'absolute'; exportContainer.style.top = '-9999px'; exportContainer.style.left = '-9999px'; exportContainer.style.width = `${maxX - minX}px`; exportContainer.style.height = `${maxY - minY}px`; exportContainer.style.background = 'transparent'; 
@@ -1079,7 +1092,17 @@
         document.getElementById('export-btn').addEventListener('click', () => {
             if (selectedElements.size === 0) return alert("Please select one or more components to export!");
             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-            selectedElements.forEach(el => { const x = parseFloat(el.style.left); const y = parseFloat(el.style.top); const w = el.offsetWidth; const h = el.offsetHeight; if (x < minX) minX = x; if (y < minY) minY = y; if (x + w > maxX) maxX = x + w; if (y + h > maxY) maxY = y + h; });
+            selectedElements.forEach(el => { 
+                const x = parseFloat(el.style.left); const y = parseFloat(el.style.top); const w = el.offsetWidth; let h = el.offsetHeight; 
+                
+                // --- BUG FIX: Account for Expanded Dropdown Lists ---
+                if (el.dataset.type === 'dropdown' && el.classList.contains('state-expanded')) {
+                    const list = el.querySelector('.wf-dropdown-list');
+                    if (list) h += list.offsetHeight;
+                }
+
+                if (x < minX) minX = x; if (y < minY) minY = y; if (x + w > maxX) maxX = x + w; if (y + h > maxY) maxY = y + h; 
+            });
             const padding = 20; minX -= padding; minY -= padding; maxX += padding; maxY += padding;
             const exportContainer = document.createElement('div'); exportContainer.style.position = 'absolute'; exportContainer.style.top = '-9999px'; exportContainer.style.left = '-9999px'; exportContainer.style.width = `${maxX - minX}px`; exportContainer.style.height = `${maxY - minY}px`; exportContainer.style.background = 'var(--canvas-bg)'; 
             document.body.appendChild(exportContainer);
